@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 include(FetchContent)
 
+include_directories(${PROJECT_SOURCE_DIR}/Headers)
+
 FetchContent_Declare(
         threepp
         GIT_REPOSITORY https://github.com/markaren/threepp.git
@@ -14,6 +16,9 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(threepp)
 
-add_executable(AsteroidProj main.cpp)
+add_executable(AsteroidProj main.cpp
+        Headers/MovingObjects.h
+        Headers/Asteroid.h
+        Headers/RandomGen.h)
 
 target_link_libraries(AsteroidProj PRIVATE threepp)
