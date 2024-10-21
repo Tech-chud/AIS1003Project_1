@@ -13,7 +13,7 @@ int main() {
 
     // Create a 2D scene
     auto scene = Scene::create();
-    scene->background = Color::white; // Set background color for contrast
+    scene->background = Color::black; // Set background color for contrast
 
     // Set up an OrthographicCamera for 2D rendering
     float left = -canvas.aspect() * 5;  // Adjust view to match aspect ratio
@@ -33,17 +33,6 @@ int main() {
     float timeSinceLastSpawn = 0.0f; // Time since the last asteroid was spawned
     float spawnInterval = RandomGen::randomFloat(2.0f, 10.0f); // Random interval for spawning (between 2 and 10 seconds)
 
-    // Function to spawn a new asteroid
-    auto spawnAsteroid = [&]() {
-        float xPos = RandomGen::randomFloat(left, right);  // Random x position
-        float yPos = RandomGen::randomFloat(bottom, top);  // Random y position
-
-        auto asteroid = std::make_shared<Asteroid>(Vector3(xPos, yPos, 0), 1.0f, Color::gray);
-        asteroid->setVelocity(Vector3(RandomGen::randomFloat(-1, 1), RandomGen::randomFloat(-1, 1), 0)); // Random velocity
-        asteroids.push_back(asteroid);
-        scene->add(asteroid->getMesh()); // Add asteroid's mesh to the scene
-    };
-
     // Handle window resizing
     canvas.onWindowResize([&](WindowSize size) {
         camera->left = -size.aspect() * 5;
@@ -59,9 +48,11 @@ int main() {
 
         // Check if it's time to spawn a new asteroid
         if (timeSinceLastSpawn >= spawnInterval) {
-            spawnAsteroid(); // Spawn a new asteroid
+            auto asteroid = Asteroid::spawnAsteroid(left, right, top, bottom, *scene); // Spawn a new asteroid
+            asteroids.push_back(asteroid);  // Store the asteroid
+
             timeSinceLastSpawn = 0.0f; // Reset the timer
-            spawnInterval = RandomGen::randomFloat(2.0f, 4.0f); // Set a new random interval
+            spawnInterval = RandomGen::randomFloat(0.01f, 0.1f); // Set a new random interval
         }
 
         // Update all asteroids

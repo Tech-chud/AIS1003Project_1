@@ -1,6 +1,7 @@
 //
 // Created by borga on 05/10/2024.
-//
+// This part of the code has heavy use of Chat GPT for now, i had a "structure" made however the use of physics objects was foreign to me
+// May edit later for less "GPT code"
 
 #ifndef MOVINGOBJECTS_H
 #define MOVINGOBJECTS_H
@@ -11,15 +12,8 @@ using namespace threepp;
 class MovingObject {
 public:
     // Constructor
-    MovingObject(const Vector3& position, float mass, const Color& color)
-        : position_(position), mass_(mass), velocity_(0, 0, 0), acceleration_(0, 0, 0) {
-
-        // Create a 2D plane geometry and material
-        geometry_ = PlaneGeometry::create(1, 1); // Example 2D plane
-        material_ = MeshBasicMaterial::create({{"color", color}});
-        mesh_ = Mesh::create(geometry_, material_);
-        mesh_->position.copy(position_);
-    }
+    MovingObject(const Vector3& position, float mass)
+        : position_(position), mass_(mass), velocity_(0, 0, 0), acceleration_(0, 0, 0) {}
 
     // Virtual destructor to ensure proper cleanup in derived classes
     virtual ~MovingObject() = default;
@@ -31,7 +25,10 @@ public:
     virtual void applyPhysics(float deltaTime) {
         velocity_ += acceleration_ * deltaTime;
         position_ += velocity_ * deltaTime;
-        mesh_->position.copy(position_); // Update mesh position
+
+        if (mesh_) {
+            mesh_->position.copy(position_); // Update mesh position
+        }
     }
 
     // Setters and getters for common attributes
@@ -47,13 +44,8 @@ public:
     void setMass(float mass) { mass_ = mass; }
     float getMass() const { return mass_; }
 
-    // New method to get the mesh for adding to the scene
+    // Accessor for mesh (to be defined by derived class)
     std::shared_ptr<Mesh> getMesh() const { return mesh_; }
-
-    // Render the object
-    void render(GLRenderer& renderer, Camera& camera) {
-        renderer.render(*mesh_, camera);
-    }
 
 protected:
     // Common attributes
@@ -62,10 +54,8 @@ protected:
     Vector3 acceleration_;
     float mass_;
 
-    // Threepp attributes for rendering
+    // Mesh, to be initialized in derived classes
     std::shared_ptr<Mesh> mesh_;
-    std::shared_ptr<BufferGeometry> geometry_;
-    std::shared_ptr<MeshBasicMaterial> material_;
 };
 
 
