@@ -73,27 +73,6 @@ public:
         // Return the asteroid object
         return asteroid;
     }
-    //May make this more "object oriented" later, wrapping isnt Asteroid specific so a general wrapping check of objects is preferred
-    //Player and bullets will allso wrap
-    void CheckPosAndWrap(float left, float right, float top, float bottom) {
-        // Check position and wrap opposite side left / right
-        // Positions are edited with +/- a constant for more "seamless" wrapping
-        if (position_.x < left-0.5f) {
-            position_.x = right+0.5f;
-        } else if (position_.x > right+0.5f) {
-            position_.x = left-0.5f;
-        }
-
-        // Check position and wrap opposite side top / bottom
-        if (position_.y > top+0.5f) {
-            position_.y = bottom-0.5f;
-        } else if (position_.y < bottom-0.5f) {
-            position_.y = top+0.5f;
-        }
-
-        // Update position
-        mesh_->position.copy(position_);
-    }
 };
 
 
