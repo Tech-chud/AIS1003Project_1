@@ -24,6 +24,8 @@ int main() {
     camera->position.z = 10; // Move the camera slightly away from the origin
 
     // List to store multiple asteroids
+    // Smart pointer for "safe" management of memory
+    // example; prevent memory leak from no longer used asteroids not actually being destroyed, no manual memory management.
     std::vector<std::shared_ptr<Asteroid>> asteroids;
 
     // Initialize a clock to track time for spawning
@@ -61,7 +63,7 @@ int main() {
             asteroid->CheckPosAndWrap(left, right, top, bottom); // Handles wrapping
         }
 
-        renderer.render(*scene, *camera); // Render the scene
+        renderer.render(*scene, *camera); // Pass scene and Camera objects to renderer. (Dereferences the smart pointer)
     });
 
     return 0;
