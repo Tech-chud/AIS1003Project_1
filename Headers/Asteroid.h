@@ -1,3 +1,9 @@
+// mild use of GPT such as help for use of
+// Arrow operator(->) , override{} and general questions about code.
+//https://www.geeksforgeeks.org/arrow-operator-in-c-c-with-examples/
+//https://en.cppreference.com/w/cpp/language/override
+
+
 #ifndef ASTEROID_HPP
 #define ASTEROID_HPP
 
@@ -19,13 +25,13 @@ public:
         mesh_->position.copy(position_); // Initialize position
     }
 
-    // Implement the update method
+    // Implement the update method (this overrides the pure virtual method in MovingObject)
     void update(float deltaTime) override {
-        // Example: rotate the asteroid over time
-        mesh_->rotation.z += 0.5f * deltaTime;
-
         // Apply physics for movement
         applyPhysics(deltaTime);
+        // Apply rotation updating via dT
+        mesh_->rotation.z += deltaTime;
+        // Additional logic to wrap the asteroid around the screen will be handled outside due to virtual void problems...
     }
 
     // Static function to spawn asteroids at the edges of the screen
@@ -37,20 +43,20 @@ public:
 
         switch (edge) {
             case 0: // Left edge
-                xPos = left;  // Fixed x position
+                xPos = left-0.3f;  // Fixed x position
                 yPos = RandomGen::randomFloat(bottom, top);  // Random y position
                 break;
             case 1: // Right edge
-                xPos = right;  // Fixed x position
+                xPos = right+0.3f;  // Fixed x position
                 yPos = RandomGen::randomFloat(bottom, top);  // Random y position
                 break;
             case 2: // Top edge
                 xPos = RandomGen::randomFloat(left, right);  // Random x position
-                yPos = top;  // Fixed y position
+                yPos = top+0.3f;  // Fixed y position
                 break;
             case 3: // Bottom edge
                 xPos = RandomGen::randomFloat(left, right);  // Random x position
-                yPos = bottom;  // Fixed y position
+                yPos = bottom-0.3f;  // Fixed y position
                 break;
         }
 
@@ -58,7 +64,7 @@ public:
         auto asteroid = std::make_shared<Asteroid>(Vector3(xPos, yPos, 0), 1.0f, Color::gray);
 
         // Set a random velocity for the asteroid
-        Vector3 velocity(RandomGen::randomFloat(-1, 1), RandomGen::randomFloat(-1, 1), 0);
+        Vector3 velocity(RandomGen::randomFloat(-1, 1), RandomGen::randomFloat(-2, 2), 0);
         asteroid->setVelocity(velocity);
 
         // Add asteroid to the scene
@@ -66,6 +72,27 @@ public:
 
         // Return the asteroid object
         return asteroid;
+    }
+    //May make this more "object oriented" later, wrapping isnt Asteroid specific so a general wrapping check of objects is preferred
+    //Player and bullets will allso wrap
+    void CheckPosAndWrap(float left, float right, float top, float bottom) {
+        // Check position and wrap opposite side left / right
+        // Positions are edited with +/- a constant for more "seamless" wrapping
+        if (position_.x < left-0.5f) {
+            position_.x = right+0.5f;
+        } else if (position_.x > right+0.5f) {
+            position_.x = left-0.5f;
+        }
+
+        // Check position and wrap opposite side top / bottom
+        if (position_.y > top+0.5f) {
+            position_.y = bottom-0.5f;
+        } else if (position_.y < bottom-0.5f) {
+            position_.y = top+0.5f;
+        }
+
+        // Update position
+        mesh_->position.copy(position_);
     }
 };
 

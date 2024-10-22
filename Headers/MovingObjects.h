@@ -1,7 +1,7 @@
 //
 // Created by borga on 05/10/2024.
-// This part of the code has heavy use of Chat GPT for now, i had a "structure" made however the use of physics objects was foreign to me
-// May edit later for less "GPT code"
+// This part of the code has heavy use of Chat GPT for now, I had a "structure" made however the use of physics objects was foreign to me
+// May edit later for less "GPT type code"
 
 #ifndef MOVINGOBJECTS_H
 #define MOVINGOBJECTS_H
@@ -40,6 +40,8 @@ public:
 
     void setAcceleration(const Vector3& acceleration) { acceleration_ = acceleration; }
     Vector3 getAcceleration() const { return acceleration_; }
+
+    //mass may be unused unless usefull for colision
 
     void setMass(float mass) { mass_ = mass; }
     float getMass() const { return mass_; }

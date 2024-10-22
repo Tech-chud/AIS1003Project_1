@@ -49,15 +49,16 @@ int main() {
         // Check if it's time to spawn a new asteroid
         if (timeSinceLastSpawn >= spawnInterval) {
             auto asteroid = Asteroid::spawnAsteroid(left, right, top, bottom, *scene); // Spawn a new asteroid
-            asteroids.push_back(asteroid);  // Store the asteroid
+            asteroids.push_back(asteroid);  // Store the asteroid in asteroid vector
 
             timeSinceLastSpawn = 0.0f; // Reset the timer
-            spawnInterval = RandomGen::randomFloat(0.01f, 0.1f); // Set a new random interval
+            spawnInterval = RandomGen::randomFloat(1.0f, 3.0f); // Set a new random interval
         }
 
         // Update all asteroids
         for (auto& asteroid : asteroids) {
             asteroid->update(deltaTime); // Update the asteroid's position and behavior
+            asteroid->CheckPosAndWrap(left, right, top, bottom); // Handles wrapping
         }
 
         renderer.render(*scene, *camera); // Render the scene

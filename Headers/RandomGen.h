@@ -1,3 +1,9 @@
+//Used help from discussion in two stack overflow threads
+//https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
+//https://stackoverflow.com/questions/7560114/random-number-c-in-some-range
+//apparently rand() is bad?
+
+
 #ifndef RANDOMGEN_HPP
 #define RANDOMGEN_HPP
 
@@ -21,6 +27,6 @@ namespace RandomGen {
         return dis(gen);
     }
 
-} // namespace RandomGen
+}
 
 #endif // RANDOMGEN_HPP
