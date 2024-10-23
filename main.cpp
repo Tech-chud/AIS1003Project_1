@@ -13,27 +13,27 @@ int main() {
 
     // Create a 2D scene
     auto scene = Scene::create();
-    scene->background = Color::black; // Set background color for contrast
+    scene->background = Color::black;
 
     // Set up an OrthographicCamera for 2D rendering
-    float left = -canvas.aspect() * 5;  // Adjust view to match aspect ratio
+    // Adjust view to match aspect ratio (allows window size change)
+    float left = -canvas.aspect() * 5;
     float right = canvas.aspect() * 5;
     float top = 5;
     float bottom = -5;
     auto camera = OrthographicCamera::create(left, right, top, bottom, 0.1f, 100);
-    camera->position.z = 10; // Move the camera slightly away from the origin
+    camera->position.z = 10;
 
     // List to store multiple asteroids
-    // Smart pointer for "safe" management of memory
-    // example; prevent memory leak from no longer used asteroids not actually being destroyed, no manual memory management.
+    // Smart pointer for "safe" management of memory preventing memory leaks
     std::vector<std::shared_ptr<Asteroid>> asteroids;
 
     // Initialize a clock to track time for spawning
     Clock clock;
 
-    // Variables for random spawning time intervals
-    float timeSinceLastSpawn = 0.0f; // Time since the last asteroid was spawned
-    float spawnInterval = RandomGen::randomFloat(2.0f, 10.0f); // Random interval for spawning (between 2 and 10 seconds)
+    // Variables for random asteroid spawning time intervals
+    float timeSinceLastSpawn = 0.0f;
+    float spawnInterval = RandomGen::randomFloat(2.0f, 10.0f);
 
     // Handle window resizing
     canvas.onWindowResize([&](WindowSize size) {
@@ -50,7 +50,7 @@ int main() {
 
         // Check if it's time to spawn a new asteroid
         if (timeSinceLastSpawn >= spawnInterval) {
-            auto asteroid = Asteroid::spawnAsteroid(left, right, top, bottom, *scene); // Spawn a new asteroid
+            auto asteroid = Asteroid::spawnAsteroid(left, right, top, bottom, *scene);
             asteroids.push_back(asteroid);  // Store the asteroid in asteroid vector
 
             timeSinceLastSpawn = 0.0f; // Reset the timer

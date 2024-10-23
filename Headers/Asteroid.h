@@ -27,7 +27,7 @@ public:
 
     // Implement the update method (this overrides the pure virtual method in MovingObject)
     void update(float deltaTime) override {
-        // Apply physics for movement
+
         applyPhysics(deltaTime);
         // Apply rotation updating via dT
         mesh_->rotation.z += deltaTime;
@@ -40,23 +40,24 @@ public:
 
         // Randomly choose one of the 4 edges
         int edge = RandomGen::randomInt(0, 3);  // 0 = left, 1 = right, 2 = top, 3 = bottom
-
+        // Spawns are edited with a constant k for more hidden spawns
+        const float k = 0.3f;
         switch (edge) {
             case 0: // Left edge
-                xPos = left-0.3f;  // Fixed x position
+                xPos = left-k;
                 yPos = RandomGen::randomFloat(bottom, top);  // Random y position
                 break;
             case 1: // Right edge
-                xPos = right+0.3f;  // Fixed x position
+                xPos = right+k;
                 yPos = RandomGen::randomFloat(bottom, top);  // Random y position
                 break;
             case 2: // Top edge
                 xPos = RandomGen::randomFloat(left, right);  // Random x position
-                yPos = top+0.3f;  // Fixed y position
+                yPos = top+k;
                 break;
             case 3: // Bottom edge
                 xPos = RandomGen::randomFloat(left, right);  // Random x position
-                yPos = bottom-0.3f;  // Fixed y position
+                yPos = bottom-k;
                 break;
         }
 
@@ -70,7 +71,7 @@ public:
         // Add asteroid to the scene
         scene.add(asteroid->getMesh());
 
-        // Return the asteroid object
+
         return asteroid;
     }
 };
