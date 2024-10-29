@@ -19,6 +19,8 @@ FetchContent_MakeAvailable(threepp)
 add_executable(AsteroidProj main.cpp
         Headers/MovingObjects.h
         Headers/Asteroid.h
-        Headers/RandomGen.h)
+        Headers/RandomGen.h
+        Headers/InputListener.h
+        Headers/HUD.h)
 
 target_link_libraries(AsteroidProj PRIVATE threepp)

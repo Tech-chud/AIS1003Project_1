@@ -2,20 +2,23 @@
 #include "Asteroid.h"
 #include "RandomGen.h"
 #include "MovingObjects.h"
+#include "InputListener.h"
 #include <vector>
+
+
 
 using namespace threepp;
 
 int main() {
-    // Initialize canvas and renderer
+
     Canvas canvas("2D Asteroids");
     GLRenderer renderer(canvas.size());
 
-    // Create a 2D scene
+
     auto scene = Scene::create();
     scene->background = Color::black;
 
-    // Set up an OrthographicCamera for 2D rendering
+
     // Adjust view to match aspect ratio (allows window size change)
     float left = -canvas.aspect() * 5;
     float right = canvas.aspect() * 5;
@@ -28,7 +31,7 @@ int main() {
     // Smart pointer for "safe" management of memory preventing memory leaks
     std::vector<std::shared_ptr<Asteroid>> asteroids;
 
-    // Initialize a clock to track time for spawning
+    // Initialize clock
     Clock clock;
 
     // Variables for random asteroid spawning time intervals
@@ -43,6 +46,12 @@ int main() {
         renderer.setSize(size);
     });
 
+    //Input Listeners
+    InputListener listener(*scene);
+    canvas.addKeyListener(listener);
+    canvas.addMouseListener(listener);
+
+
     // Animation loop
     canvas.animate([&]() {
         float deltaTime = clock.getDelta(); // Get time since the last frame
@@ -54,7 +63,7 @@ int main() {
             asteroids.push_back(asteroid);  // Store the asteroid in asteroid vector
 
             timeSinceLastSpawn = 0.0f; // Reset the timer
-            spawnInterval = RandomGen::randomFloat(1.0f, 3.0f); // Set a new random interval
+            spawnInterval = RandomGen::randomFloat(1.0f, 3.0f);
         }
 
         // Update all asteroids
@@ -63,7 +72,7 @@ int main() {
             asteroid->CheckPosAndWrap(left, right, top, bottom); // Handles wrapping
         }
 
-        renderer.render(*scene, *camera); // Pass scene and Camera objects to renderer. (Dereferences the smart pointer)
+        renderer.render(*scene, *camera); // Pass scene and Camera objects to renderer.
     });
 
     return 0;
