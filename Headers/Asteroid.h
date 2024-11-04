@@ -29,7 +29,7 @@ public:
     void update(float deltaTime) override {
 
         applyPhysics(deltaTime);
-        // Apply rotation updating via dT
+
         mesh_->rotation.z += deltaTime;
         // Additional logic to wrap the asteroid around the screen will be handled outside due to virtual void problems...
     }

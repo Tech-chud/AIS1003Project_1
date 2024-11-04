@@ -20,7 +20,7 @@ int main() {
     scene->background = Color::black;
 
 
-    // Adjust view to match aspect ratio (allows window size change)
+
     float left = -canvas.aspect() * 5;
     float right = canvas.aspect() * 5;
     float top = 5;
@@ -32,10 +32,10 @@ int main() {
     // Smart pointer for "safe" management of memory preventing memory leaks
     std::vector<std::shared_ptr<Asteroid>> asteroids;
 
-    // Initialize clock
+
     Clock clock;
 
-    // Create player object and add it to the scene
+    // Create player object
     Player player(Vector3(0, 0, 0), 1.0f, Color::white);
     scene->add(player.getMesh());
 
@@ -57,17 +57,17 @@ int main() {
     canvas.addMouseListener(listener);
 
 
-    // Animation loop
-    canvas.animate([&]() {
-        float deltaTime = clock.getDelta(); // Get time since the last frame
-        timeSinceLastSpawn += deltaTime;    // Accumulate time since the last spawn
 
-        // Check if it's time to spawn a new asteroid
+    canvas.animate([&]() {
+        float deltaTime = clock.getDelta();
+        timeSinceLastSpawn += deltaTime;
+
+        // Spawn asteroids via intervals
         if (timeSinceLastSpawn >= spawnInterval) {
             auto asteroid = Asteroid::spawnAsteroid(left, right, top, bottom, *scene);
             asteroids.push_back(asteroid);  // Store the asteroid in asteroid vector
 
-            timeSinceLastSpawn = 0.0f; // Reset the timer
+            timeSinceLastSpawn = 0.0f;
             spawnInterval = RandomGen::randomFloat(1.0f, 3.0f);
         }
 
@@ -78,13 +78,13 @@ int main() {
         }
 
         // Update player actions based on input
-        listener.updateActions();
+        listener.updateActions(deltaTime);
 
         // Update player position and handle wrapping
         player.update(deltaTime);
         player.CheckPosAndWrap(left, right, top, bottom);
 
-        renderer.render(*scene, *camera); // Pass scene and Camera objects to renderer.
+        renderer.render(*scene, *camera);
     });
 
     return 0;

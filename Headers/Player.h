@@ -10,10 +10,10 @@ class Player : public MovingObject {
 public:
     // Constructor with initial position and color
     Player(const Vector3& position, float mass, const Color& color)
-        : MovingObject(position, mass), rotationAngle(0.0f), thrustPower(5.0f), maxSpeed(10.0f) {
+        : MovingObject(position, mass), rotationAngle(0.0f), thrustPower(20.0f), maxSpeed(10.0f), rotationSpeed(2.0f) {
 
         // Define player-specific geometry and material
-        auto geometry = ConeGeometry::create(0.2, 0.5, 3);
+        auto geometry = ConeGeometry::create(0.2, 0.5, 3); // Triangle shape for spaceship
         auto material = MeshBasicMaterial::create({{"color", color}});
 
         // Create the mesh for the player
@@ -21,22 +21,19 @@ public:
         mesh_->position.copy(position_);
     }
 
-    // Rotate the player based on input
-    void rotate(float angleDelta) {
-        rotationAngle += angleDelta;
-        mesh_->rotation.z = -rotationAngle; // Rotate around the z-axis
+    // Rotate the player based on input, with dt
+    void rotate(float direction, float deltaTime) {
+        rotationAngle += direction * rotationSpeed * deltaTime;
+        mesh_->rotation.z = +rotationAngle;
     }
 
-    // Apply thrust in the forward direction
-    void applyThrust() {
-        // Convert rotation angle to radians
+    // Apply thrust in the forward direction, with deltaTime for consistent acceleration
+    void applyThrust(float deltaTime) {
         float angleRad = rotationAngle;
-
-        // Calculate thrust direction based on rotation
         Vector3 thrustDirection(std::cos(angleRad), std::sin(angleRad), 0);
 
-        // Apply thrust to the velocity
-        velocity_ += thrustDirection * thrustPower * 0.1f;
+        // Apply thrust proportional to deltaTime
+        velocity_ += thrustDirection * thrustPower * deltaTime;
 
         // Limit the speed to a maximum value
         if (velocity_.length() > maxSpeed) {
@@ -47,17 +44,18 @@ public:
 
     // Update the player's position
     void update(float deltaTime) override {
-        // Simulate drift by applying current velocity to position
+        // Apply physics (velocity-based position update)
         applyPhysics(deltaTime);
 
-        // Slowly decay the velocity to create a floaty effect
-        velocity_ *= 0.99f; // Apply a small damping factor for a more controlled drift
+        // Floaty
+        velocity_ *= std::pow(0.99f, deltaTime * 60.0f);
     }
 
 private:
-    float rotationAngle;    // The current rotation angle of the spaceship
-    float thrustPower;      // The force applied when thrusting
-    float maxSpeed;         // Maximum speed limit for the spaceship
+    float rotationAngle;
+    float thrustPower;
+    float maxSpeed;
+    float rotationSpeed;
 };
 
 #endif // PLAYER_HPP

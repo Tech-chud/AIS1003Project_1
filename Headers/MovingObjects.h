@@ -38,18 +38,18 @@ public:
 
     // Method to wrap objects around the screen
     void CheckPosAndWrap(float left, float right, float top, float bottom) {
-        // Check if the object goes off the left or right side
+
         if (position_.x < left) {
-            position_.x = right; // Wrap to the right side
+            position_.x = right;
         } else if (position_.x > right) {
-            position_.x = left; // Wrap to the left side
+            position_.x = left;
         }
 
         // Check if the object goes off the top or bottom side
         if (position_.y > top) {
-            position_.y = bottom; // Wrap to the bottom
+            position_.y = bottom;
         } else if (position_.y < bottom) {
-            position_.y = top; // Wrap to the top
+            position_.y = top;
         }
 
         // Update the mesh position to reflect the wrapped position
