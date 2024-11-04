@@ -21,6 +21,7 @@ add_executable(AsteroidProj main.cpp
         Headers/Asteroid.h
         Headers/RandomGen.h
         Headers/InputListener.h
-        Headers/HUD.h)
+        Headers/HUD.h
+        Headers/Player.h)
 
 target_link_libraries(AsteroidProj PRIVATE threepp)

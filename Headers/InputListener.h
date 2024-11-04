@@ -1,50 +1,71 @@
-//
-// Created by borga on 10/29/2024.
-//
+#ifndef INPUTLISTENER_HPP
+#define INPUTLISTENER_HPP
 
-#ifndef KEYLISTENER_H
-#define KEYLISTENER_H
-#include <iostream>
 #include "threepp/threepp.hpp"
+#include "Player.h"
+#include <set>
+#include <iostream>
 
-class InputListener: public KeyListener, public MouseListener {
+using namespace threepp;
 
-    public:
+class InputListener : public KeyListener, public MouseListener {
+public:
+    explicit InputListener(Scene& scene, Player& player)
+        : scene(scene), player(player), addedPlayer(true) {
+        scene.add(player.getMesh());
+    }
 
-    explicit InputListener(Scene& scene): scene(scene){}
+    // Handles key press events
+    void onKeyPressed(KeyEvent evt) override {
+        keysPressed.insert(evt.key);
+        keysReleased.erase(evt.key);
+    }
 
+    // Handles key release events
+    void onKeyReleased(KeyEvent evt) override {
+        keysPressed.erase(evt.key);
+        keysReleased.insert(evt.key);
+    }
 
-    void onMouseDown(int key, const Vector2 & pos) override {
+    // Handles mouse click events
+    void onMouseDown(int button, const Vector2& pos) override {
+        if (button == 0) { // Left mouse button
+            std::cout << "Mouse pressed at position: " << pos.x << ", " << pos.y << std::endl;
+        }
+    }
 
-        if (key == 0) {
-            std::cout << "Mousepressed" << std::endl;
-            handleMousePress();
+    // Updates player actions based on currently pressed keys
+    void updateActions() {
+        // Handle rotation
+        if (isKeyPressed(Key::A)) {
+            player.rotate(0.05f); // Rotate left
+        }
+        if (isKeyPressed(Key::D)) {
+            player.rotate(-0.05f); // Rotate right
         }
 
+        // Handle thrust
+        if (isKeyPressed(Key::W)) {
+            player.applyThrust(); // Apply thrust forward
+        }
     }
 
 private:
     Scene& scene;
-    Mesh* myAddedMesh = nullptr;
-    bool addedPlayer = false;
+    Player& player;
+    bool addedPlayer;
+    std::set<Key> keysPressed;
+    std::set<Key> keysReleased;
 
-    void handleMousePress() {
-        if (!addedPlayer) {
-            auto mesh = createPlayer();
-            myAddedMesh = mesh.get();
-            scene.add(mesh);
-            addedPlayer = true;
-        }
+    // Checks if a specific key is currently pressed
+    bool isKeyPressed(Key key) const {
+        return keysPressed.find(key) != keysPressed.end();
     }
 
-    std::shared_ptr<Mesh> createPlayer() {
-        auto geometry = ::CylinderGeometry::create(0.05,0.2,0.5);
-        auto material = MeshBasicMaterial::create();
-        material->color = Color::white;
-        auto mesh = Mesh::create(geometry, material);
-        return mesh;
+    // Checks if a specific key has been released
+    bool isKeyReleased(Key key) const {
+        return keysReleased.find(key) != keysReleased.end();
     }
-
 };
 
-#endif //KEYLISTENER_H
+#endif // INPUTLISTENER_HPP

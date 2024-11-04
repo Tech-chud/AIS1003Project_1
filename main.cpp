@@ -3,6 +3,7 @@
 #include "RandomGen.h"
 #include "MovingObjects.h"
 #include "InputListener.h"
+#include "Player.h"
 #include <vector>
 
 
@@ -34,6 +35,10 @@ int main() {
     // Initialize clock
     Clock clock;
 
+    // Create player object and add it to the scene
+    Player player(Vector3(0, 0, 0), 1.0f, Color::white);
+    scene->add(player.getMesh());
+
     // Variables for random asteroid spawning time intervals
     float timeSinceLastSpawn = 0.0f;
     float spawnInterval = RandomGen::randomFloat(2.0f, 10.0f);
@@ -46,8 +51,8 @@ int main() {
         renderer.setSize(size);
     });
 
-    //Input Listeners
-    InputListener listener(*scene);
+    // Input Listeners
+    InputListener listener(*scene, player);
     canvas.addKeyListener(listener);
     canvas.addMouseListener(listener);
 
@@ -71,6 +76,13 @@ int main() {
             asteroid->update(deltaTime); // Update the asteroid's position and behavior
             asteroid->CheckPosAndWrap(left, right, top, bottom); // Handles wrapping
         }
+
+        // Update player actions based on input
+        listener.updateActions();
+
+        // Update player position and handle wrapping
+        player.update(deltaTime);
+        player.CheckPosAndWrap(left, right, top, bottom);
 
         renderer.render(*scene, *camera); // Pass scene and Camera objects to renderer.
     });

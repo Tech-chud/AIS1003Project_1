@@ -9,6 +9,7 @@
 
 using namespace threepp;
 
+
 class MovingObject {
 public:
     // Constructor
@@ -23,37 +24,40 @@ public:
 
     // Physics update for position based on velocity and acceleration
     virtual void applyPhysics(float deltaTime) {
+        // Update velocity with acceleration
         velocity_ += acceleration_ * deltaTime;
+
+        // Update position with velocity
         position_ += velocity_ * deltaTime;
 
+        // Synchronize mesh position with updated logical position
         if (mesh_) {
-            mesh_->position.copy(position_); // Update mesh position
+            mesh_->position.copy(position_);
         }
     }
 
-    //General wrapping logic. Will be implemented into Asteroids, Player and Bullet
+    // Method to wrap objects around the screen
     void CheckPosAndWrap(float left, float right, float top, float bottom) {
-        // Check position and wrap opposite side left / right
-        // Positions are edited with +/- a constant for more "seamless" wrapping
-        const float k = 0.5f;
-        if (position_.x < left-k) {
-            position_.x = right+k;
-        } else if (position_.x > right+k) {
-            position_.x = left-k;
+        // Check if the object goes off the left or right side
+        if (position_.x < left) {
+            position_.x = right; // Wrap to the right side
+        } else if (position_.x > right) {
+            position_.x = left; // Wrap to the left side
         }
 
-        // Check position and wrap opposite side top / bottom
-        if (position_.y > top+k) {
-            position_.y = bottom-k;
-        } else if (position_.y < bottom-k) {
-            position_.y = top+k;
+        // Check if the object goes off the top or bottom side
+        if (position_.y > top) {
+            position_.y = bottom; // Wrap to the bottom
+        } else if (position_.y < bottom) {
+            position_.y = top; // Wrap to the top
         }
 
-        // Update position
-        mesh_->position.copy(position_);
+        // Update the mesh position to reflect the wrapped position
+        if (mesh_) {
+            mesh_->position.copy(position_);
+        }
     }
 
-    // Setters and getters for common attributes
     void setPosition(const Vector3& position) { position_ = position; }
     Vector3 getPosition() const { return position_; }
 
@@ -62,8 +66,6 @@ public:
 
     void setAcceleration(const Vector3& acceleration) { acceleration_ = acceleration; }
     Vector3 getAcceleration() const { return acceleration_; }
-
-    //mass may be unused unless useful for colision
 
     void setMass(float mass) { mass_ = mass; }
     float getMass() const { return mass_; }
