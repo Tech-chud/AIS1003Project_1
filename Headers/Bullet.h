@@ -15,7 +15,7 @@ class Bullet : public MovingObject {
 public:
     // Constructor to initialize the bullet with a position, direction, speed, and color
     Bullet(const Vector3& position, float angle, float speed, const Color& color)
-        : MovingObject(position, 0.1f), lifespan(3.0f) {
+        : MovingObject(position, 0.1f), lifespan(2.0f) {
 
 
         auto geometry = CylinderGeometry::create(0.05f, 0.05f, 0.1f);
@@ -39,7 +39,7 @@ public:
         lifespan -= deltaTime;
 
         // Remove after lifespan is over
-        if (lifespan <= 1.0f) {
+        if (lifespan <= 0.0f) {
             isActive = false;
         }
     }
