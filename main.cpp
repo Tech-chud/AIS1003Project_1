@@ -4,6 +4,7 @@
 #include "MovingObjects.h"
 #include "InputListener.h"
 #include "Player.h"
+#include "Bullet.h"
 #include <vector>
 
 
@@ -20,7 +21,6 @@ int main() {
     scene->background = Color::black;
 
 
-
     float left = -canvas.aspect() * 5;
     float right = canvas.aspect() * 5;
     float top = 5;
@@ -29,8 +29,9 @@ int main() {
     camera->position.z = 10;
 
     // List to store multiple asteroids
-    // Smart pointer for "safe" management of memory preventing memory leaks
     std::vector<std::shared_ptr<Asteroid>> asteroids;
+    // LIst to store bullets
+    std::vector<std::shared_ptr<Bullet>> bullets;
 
 
     Clock clock;
@@ -52,7 +53,7 @@ int main() {
     });
 
     // Input Listeners
-    InputListener listener(*scene, player);
+    InputListener listener(*scene, player, bullets);
     canvas.addKeyListener(listener);
     canvas.addMouseListener(listener);
 
@@ -79,6 +80,22 @@ int main() {
 
         // Update player actions based on input
         listener.updateActions(deltaTime);
+
+        // Update all bullets
+        // Includes ChatGPT code
+        for (auto it = bullets.begin(); it != bullets.end(); ) {
+            auto& bullet = *it;
+            bullet->update(deltaTime);
+
+            // Remove inactive bullets
+            if (!bullet->isActiveBullet()) {
+
+                scene->remove(*bullet->getMesh());
+                it = bullets.erase(it);
+            } else {
+                ++it;
+            }
+        }
 
         // Update player position and handle wrapping
         player.update(deltaTime);

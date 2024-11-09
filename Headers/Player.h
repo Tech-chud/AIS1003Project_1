@@ -50,8 +50,13 @@ public:
 
         applyPhysics(deltaTime);
 
-
+        //floaty
         velocity_ *= std::pow(0.99f, deltaTime * 60.0f);
+    }
+
+    //Getter for rotation angle
+    float getRotationAngle() const {
+        return rotationAngle;
     }
 
 private:
