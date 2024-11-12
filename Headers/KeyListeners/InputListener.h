@@ -2,8 +2,8 @@
 #define INPUTLISTENER_HPP
 
 #include "threepp/threepp.hpp"
-#include "Player.h"
-#include "Bullet.h"
+#include "Sprites/Player.h"
+#include "Sprites/Bullet.h"
 #include <set>
 #include <iostream>
 

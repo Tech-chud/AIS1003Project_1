@@ -6,14 +6,14 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include "MovingObjects.h"
-#include "threepp/threepp.hpp"
+#include "../Util/MovingObjects.h"
+#include "../../cmake-build-debug/_deps/threepp-src/include/threepp/threepp.hpp"
 
 using namespace threepp;
 
 class Bullet : public MovingObject {
 public:
-    // Constructor to initialize the bullet with a position, direction, speed, and color
+    // Constructor to initialize the bullet
     Bullet(const Vector3& position, float angle, float speed, const Color& color)
         : MovingObject(position, 0.1f), lifespan(2.0f) {
 
@@ -47,6 +47,11 @@ public:
     // Check if the bullet is active (still within its lifespan)
     bool isActiveBullet() const {
         return isActive;
+    }
+
+    //Return "radius" of Bullet for colision detection
+    float getRadius() const override {
+        return 0.1f;
     }
 
 private:

@@ -7,8 +7,8 @@
 #ifndef ASTEROID_HPP
 #define ASTEROID_HPP
 
-#include "MovingObjects.h"
-#include "RandomGen.h"
+#include "../Util/MovingObjects.h"
+#include "../Util/RandomGen.h"
 
 class Asteroid : public MovingObject {
 public:
@@ -73,6 +73,11 @@ public:
 
 
         return asteroid;
+
+    }
+    //Return "radius" of Asteroid for colision detection
+    float getRadius() const override {
+        return 1.0f;
     }
 };
 

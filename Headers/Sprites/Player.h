@@ -1,8 +1,8 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include "MovingObjects.h"
-#include "threepp/threepp.hpp"
+#include "../Util/MovingObjects.h"
+#include "../../cmake-build-debug/_deps/threepp-src/include/threepp/threepp.hpp"
 
 using namespace threepp;
 
@@ -57,6 +57,11 @@ public:
     //Getter for rotation angle
     float getRotationAngle() const {
         return rotationAngle;
+    }
+
+    //Return "radius" of Player for colision detection
+    float getRadius() const override {
+        return 0.5f;
     }
 
 private:

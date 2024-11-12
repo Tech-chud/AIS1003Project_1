@@ -1,18 +1,17 @@
 #include "threepp/threepp.hpp"
-#include "Asteroid.h"
-#include "RandomGen.h"
-#include "MovingObjects.h"
-#include "InputListener.h"
-#include "Player.h"
-#include "Bullet.h"
+#include "Headers/Sprites/Asteroid.h"
+#include "Headers/Sprites/Player.h"
+#include "Headers/Sprites/Bullet.h"
+#include "Headers/KeyListeners/InputListener.h"
+#include "Headers/Collision/BaseCollisionDetector.h"
+#include "Headers/Util/RandomGen.h"
+#include "Headers/Util/MovingObjects.h"
 #include <vector>
-
 
 
 using namespace threepp;
 
 int main() {
-
     Canvas canvas("2D Asteroids");
     GLRenderer renderer(canvas.size());
 
@@ -29,9 +28,9 @@ int main() {
     camera->position.z = 10;
 
     // List to store multiple asteroids
-    std::vector<std::shared_ptr<Asteroid>> asteroids;
+    std::vector<std::shared_ptr<Asteroid> > asteroids;
     // LIst to store bullets
-    std::vector<std::shared_ptr<Bullet>> bullets;
+    std::vector<std::shared_ptr<Bullet> > bullets;
 
 
     Clock clock;
@@ -58,44 +57,43 @@ int main() {
     canvas.addMouseListener(listener);
 
 
-
     canvas.animate([&]() {
         float deltaTime = clock.getDelta();
         timeSinceLastSpawn += deltaTime;
 
-        // Spawn asteroids via intervals
+        // Spawn asteroids
         if (timeSinceLastSpawn >= spawnInterval) {
             auto asteroid = Asteroid::spawnAsteroid(left, right, top, bottom, *scene);
-            asteroids.push_back(asteroid);  // Store the asteroid in asteroid vector
+            asteroids.push_back(asteroid);
 
             timeSinceLastSpawn = 0.0f;
             spawnInterval = RandomGen::randomFloat(1.0f, 3.0f);
         }
 
         // Update all asteroids
-        for (auto& asteroid : asteroids) {
+        for (auto &asteroid: asteroids) {
             asteroid->update(deltaTime); // Update the asteroid's position and behavior
             asteroid->CheckPosAndWrap(left, right, top, bottom); // Handles wrapping
         }
 
-        // Update player actions based on input
+        // Update player actions
         listener.updateActions(deltaTime);
 
         // Update all bullets
         // Includes ChatGPT code
-        for (auto it = bullets.begin(); it != bullets.end(); ) {
-            auto& bullet = *it;
+        for (auto it = bullets.begin(); it != bullets.end();) {
+            auto &bullet = *it;
             bullet->update(deltaTime);
 
             // Remove inactive bullets
             if (!bullet->isActiveBullet()) {
-
                 scene->remove(*bullet->getMesh());
                 it = bullets.erase(it);
             } else {
                 ++it;
             }
         }
+
 
         // Update player position and handle wrapping
         player.update(deltaTime);

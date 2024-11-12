@@ -17,12 +17,13 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(threepp)
 
 add_executable(AsteroidProj main.cpp
-        Headers/MovingObjects.h
-        Headers/Asteroid.h
-        Headers/RandomGen.h
-        Headers/InputListener.h
-        Headers/HUD.h
-        Headers/Player.h
-        Headers/Bullet.h)
+        Headers/Util/MovingObjects.h
+        Headers/Sprites/Asteroid.h
+        Headers/Util/RandomGen.h
+        Headers/KeyListeners/InputListener.h
+        Headers/HUD/HUD.h
+        Headers/Sprites/Player.h
+        Headers/Sprites/Bullet.h
+        Headers/Collision/BaseCollisionDetector.h)
 
 target_link_libraries(AsteroidProj PRIVATE threepp)

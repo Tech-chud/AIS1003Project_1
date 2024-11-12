@@ -5,7 +5,7 @@
 
 #ifndef MOVINGOBJECTS_H
 #define MOVINGOBJECTS_H
-#include "threepp/threepp.hpp"
+#include "../../cmake-build-debug/_deps/threepp-src/include/threepp/threepp.hpp"
 
 using namespace threepp;
 
@@ -56,6 +56,11 @@ public:
         if (mesh_) {
             mesh_->position.copy(position_);
         }
+    }
+
+    //Function to return radius "(default is 0.5)"
+    virtual float getRadius() const {
+        return 0.5f;
     }
 
     void setPosition(const Vector3& position) { position_ = position; }
