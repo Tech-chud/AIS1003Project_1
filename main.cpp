@@ -62,12 +62,12 @@ int main() {
         timeSinceLastSpawn += deltaTime;
 
         // Spawn asteroids
-        if (timeSinceLastSpawn >= spawnInterval) {
+        if (timeSinceLastSpawn >= spawnInterval && asteroids.size() < 2000) {
             auto asteroid = Asteroid::spawnAsteroid(left, right, top, bottom, *scene);
             asteroids.push_back(asteroid);
 
             timeSinceLastSpawn = 0.0f;
-            spawnInterval = RandomGen::randomFloat(1.0f, 3.0f);
+            spawnInterval = RandomGen::randomFloat(0.1f, 0.1f);
         }
 
         // Update all asteroids
@@ -94,6 +94,31 @@ int main() {
             }
         }
 
+        //TEST ONLY [
+        for (auto itA = asteroids.begin(); itA != asteroids.end(); ) {
+    bool asteroidRemoved = false;
+    for (auto itB = bullets.begin(); itB != bullets.end(); ) {
+        if (BaseCollisionDetector::hasCollided(*itA, *itB)) {
+            // Handle collision by removing from the scene
+            scene->remove(*(*itA)->getMesh());
+            scene->remove(*(*itB)->getMesh());
+
+            // Erase bullet from vector and break the inner loop
+            itB = bullets.erase(itB);
+            asteroidRemoved = true;
+        } else {
+            ++itB;
+        }
+    }
+        // ]
+
+    // If the asteroid was hit, remove it from the vector
+    if (asteroidRemoved) {
+        itA = asteroids.erase(itA);
+    } else {
+        ++itA;
+    }
+}
 
         // Update player position and handle wrapping
         player.update(deltaTime);

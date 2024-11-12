@@ -5,7 +5,7 @@
 #ifndef BASECOLLISIONDETECTOR_HPP
 #define BASECOLLISIONDETECTOR_HPP
 
-#include "Headers/Util/MovingObjects.h"
+#include "../Util/MovingObjects.h"
 #include <memory>
 
 class BaseCollisionDetector {
