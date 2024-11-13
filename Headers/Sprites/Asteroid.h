@@ -7,8 +7,8 @@
 #ifndef ASTEROID_HPP
 #define ASTEROID_HPP
 
-#include "../Util/MovingObjects.h"
-#include "../Util/RandomGen.h"
+#include "Util/MovingObjects.h"
+#include "Util/RandomGen.h"
 
 class Asteroid : public MovingObject {
 public:

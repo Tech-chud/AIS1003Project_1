@@ -1,8 +1,8 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include "../Util/MovingObjects.h"
-#include "../../cmake-build-debug/_deps/threepp-src/include/threepp/threepp.hpp"
+#include "Util/MovingObjects.h"
+#include "threepp/threepp.hpp"
 
 using namespace threepp;
 
