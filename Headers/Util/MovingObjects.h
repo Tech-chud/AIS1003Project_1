@@ -5,7 +5,7 @@
 
 #ifndef MOVINGOBJECTS_H
 #define MOVINGOBJECTS_H
-#include "../../cmake-build-debug/_deps/threepp-src/include/threepp/threepp.hpp"
+#include "threepp/threepp.hpp"
 
 using namespace threepp;
 
