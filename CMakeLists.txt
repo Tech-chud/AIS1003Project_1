@@ -16,7 +16,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(threepp)
 
-add_executable(AsteroidProj main.cpp
+add_executable(AsteroidProj src/main.cpp
         Headers/Util/MovingObjects.h
         Headers/Sprites/Asteroid.h
         Headers/Util/RandomGen.h
@@ -24,6 +24,12 @@ add_executable(AsteroidProj main.cpp
         Headers/HUD/HUD.h
         Headers/Sprites/Player.h
         Headers/Sprites/Bullet.h
-        Headers/Collision/BaseCollisionDetector.h)
+        Headers/Collision/BaseCollisionDetector.h
+        Headers/Collision/ElasticCollision.h
+        Headers/Collision/InelasticCollision.h
+)
 
 target_link_libraries(AsteroidProj PRIVATE threepp)
+
+add_subdirectory(src)
+add_subdirectory(tests)

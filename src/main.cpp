@@ -1,11 +1,11 @@
 #include "threepp/threepp.hpp"
-#include "Headers/Sprites/Asteroid.h"
-#include "Headers/Sprites/Player.h"
-#include "Headers/Sprites/Bullet.h"
-#include "Headers/KeyListeners/InputListener.h"
-#include "Headers/Collision/BaseCollisionDetector.h"
-#include "Headers/Util/RandomGen.h"
-#include "Headers/Util/MovingObjects.h"
+#include "Sprites/Asteroid.h"
+#include "Sprites/Player.h"
+#include "Sprites/Bullet.h"
+#include "KeyListeners/InputListener.h"
+#include "Collision/BaseCollisionDetector.h"
+#include "Util/RandomGen.h"
+#include "Util/MovingObjects.h"
 #include <vector>
 
 
@@ -96,30 +96,30 @@ int main() {
 
 
         //TEST ONLY GPT COPY [
-        for (auto itA = asteroids.begin(); itA != asteroids.end(); ) {
-    bool asteroidRemoved = false;
-    for (auto itB = bullets.begin(); itB != bullets.end(); ) {
-        if (BaseCollisionDetector::hasCollided(*itA, *itB)) {
-            // Handle collision by removing from the scene
-            scene->remove(*(*itA)->getMesh());
-            scene->remove(*(*itB)->getMesh());
+        for (auto itA = asteroids.begin(); itA != asteroids.end();) {
+            bool asteroidRemoved = false;
+            for (auto itB = bullets.begin(); itB != bullets.end();) {
+                if (BaseCollisionDetector::hasCollided(*itA, *itB)) {
+                    // Handle collision by removing from the scene
+                    scene->remove(*(*itA)->getMesh());
+                    scene->remove(*(*itB)->getMesh());
 
-            // Erase bullet from vector and break the inner loop
-            itB = bullets.erase(itB);
-            asteroidRemoved = true;
-        } else {
-            ++itB;
+                    // Erase bullet from vector and break the inner loop
+                    itB = bullets.erase(itB);
+                    asteroidRemoved = true;
+                } else {
+                    ++itB;
+                }
+            }
+
+
+            // If the asteroid was hit, remove it from the vector
+            if (asteroidRemoved) {
+                itA = asteroids.erase(itA);
+            } else {
+                ++itA;
+            }
         }
-    }
-
-
-    // If the asteroid was hit, remove it from the vector
-    if (asteroidRemoved) {
-        itA = asteroids.erase(itA);
-    } else {
-        ++itA;
-    }
-}
 
         // TEST END]
 

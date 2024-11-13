@@ -1,0 +1,8 @@
+//
+// Created by borga on 11/13/2024.
+//
+
+#ifndef INELASTICCOLLISION_H
+#define INELASTICCOLLISION_H
+
+#endif //INELASTICCOLLISION_H

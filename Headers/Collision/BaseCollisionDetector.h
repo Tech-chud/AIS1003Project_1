@@ -10,20 +10,18 @@
 
 class BaseCollisionDetector {
 public:
-    // Method to check if two MovingObject instances have collided
-    static bool hasCollided(const std::shared_ptr<MovingObject>& obj1, const std::shared_ptr<MovingObject>& obj2) {
-        // Get the positions of both objects
-        const auto& pos1 = obj1->getPosition();
-        const auto& pos2 = obj2->getPosition();
+    // Check if two objects collide
+    static bool hasCollided(const std::shared_ptr<MovingObject> &obj1, const std::shared_ptr<MovingObject> &obj2) {
+        const auto &pos1 = obj1->getPosition();
+        const auto &pos2 = obj2->getPosition();
 
-        // Calculate the distance between the two objects
+        // Distance between objects
         float distance = pos1.distanceTo(pos2);
 
-        // Check if the distance is less than the sum of their radii (simple circular collision detection)
+        // Check if the distance is less than the sum of their radii
         float combinedRadius = obj1->getRadius() + obj2->getRadius();
         return distance <= combinedRadius;
     }
 };
 
 #endif // BASECOLLISIONDETECTOR_HPP
-
