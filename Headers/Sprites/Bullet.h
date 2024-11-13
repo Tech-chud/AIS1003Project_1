@@ -6,7 +6,7 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include "../Util/MovingObjects.h"
+#include "Util/MovingObjects.h"
 #include "../../cmake-build-debug/_deps/threepp-src/include/threepp/threepp.hpp"
 
 using namespace threepp;

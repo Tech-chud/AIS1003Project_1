@@ -62,12 +62,12 @@ int main() {
         timeSinceLastSpawn += deltaTime;
 
         // Spawn asteroids
-        if (timeSinceLastSpawn >= spawnInterval && asteroids.size() < 2000) {
+        if (timeSinceLastSpawn >= spawnInterval && asteroids.size() < 20) {
             auto asteroid = Asteroid::spawnAsteroid(left, right, top, bottom, *scene);
             asteroids.push_back(asteroid);
 
             timeSinceLastSpawn = 0.0f;
-            spawnInterval = RandomGen::randomFloat(0.1f, 0.1f);
+            spawnInterval = RandomGen::randomFloat(1.0f, 2.0f);
         }
 
         // Update all asteroids
@@ -94,7 +94,8 @@ int main() {
             }
         }
 
-        //TEST ONLY [
+
+        //TEST ONLY GPT COPY [
         for (auto itA = asteroids.begin(); itA != asteroids.end(); ) {
     bool asteroidRemoved = false;
     for (auto itB = bullets.begin(); itB != bullets.end(); ) {
@@ -110,7 +111,7 @@ int main() {
             ++itB;
         }
     }
-        // ]
+
 
     // If the asteroid was hit, remove it from the vector
     if (asteroidRemoved) {
@@ -119,6 +120,9 @@ int main() {
         ++itA;
     }
 }
+
+        // TEST END]
+
 
         // Update player position and handle wrapping
         player.update(deltaTime);

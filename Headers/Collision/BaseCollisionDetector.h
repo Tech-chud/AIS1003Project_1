@@ -20,7 +20,7 @@ public:
         float distance = pos1.distanceTo(pos2);
 
         // Check if the distance is less than the sum of their radii (simple circular collision detection)
-        float combinedRadius = obj1->getRadius() + obj2->getRadius(); // Ensure getRadius() is defined in MovingObject
+        float combinedRadius = obj1->getRadius() + obj2->getRadius();
         return distance <= combinedRadius;
     }
 };

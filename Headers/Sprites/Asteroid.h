@@ -75,7 +75,7 @@ public:
         return asteroid;
 
     }
-    //Return "radius" of Asteroid for colision detection
+    //Return "radius" of Asteroid for collision detection
     float getRadius() const override {
         return 1.0f;
     }
