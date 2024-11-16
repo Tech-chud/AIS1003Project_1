@@ -1,7 +1,3 @@
-//
-// Created by borga on 09/11/2024.
-//
-
 
 #ifndef BULLET_H
 #define BULLET_H

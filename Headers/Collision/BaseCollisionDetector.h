@@ -1,6 +1,3 @@
-//
-// Created by borga on 12/11/2024.
-//
 
 #ifndef BASECOLLISIONDETECTOR_HPP
 #define BASECOLLISIONDETECTOR_HPP

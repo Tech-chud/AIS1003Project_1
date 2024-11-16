@@ -1,5 +1,3 @@
-//
-// Created by borga on 05/10/2024.
 // This part of the code has heavy use of Chat GPT for now
 // May edit later for less "GPT type code"
 
@@ -9,12 +7,10 @@
 
 using namespace threepp;
 
-
 class MovingObject {
 public:
     // Constructor
-    MovingObject(const Vector3& position, float mass)
-        : position_(position), mass_(mass), velocity_(0, 0, 0), acceleration_(0, 0, 0) {}
+    MovingObject(const Vector3& position, float mass);
 
     // Virtual destructor to ensure proper cleanup in derived classes
     virtual ~MovingObject() = default;
@@ -22,70 +18,26 @@ public:
     // Pure virtual function to update object (must be implemented by derived classes)
     virtual void update(float deltaTime) = 0;
 
-    // Physics update for position based on velocity and acceleration
-    virtual void applyPhysics(float deltaTime) {
-        // Update velocity with acceleration
-        velocity_ += acceleration_ * deltaTime;
+    // Physics update of position using velocity and acceleration
+    void applyPhysics(float deltaTime);
 
-        // Update position with velocity
-        position_ += velocity_ * deltaTime;
+    // Method to wrap the object around the screen if it goes out of bounds
+    void checkAndWrap(float left, float right, float top, float bottom);
 
-        // Synchronize mesh position with updated logical position
-        if (mesh_) {
-            mesh_->position.copy(position_);
-        }
-    }
+    // Getter for the mesh
+    std::shared_ptr<Mesh> getMesh() const;
 
-    // Method to wrap objects around the screen
-    void CheckPosAndWrap(float left, float right, float top, float bottom) {
+    // Getter for the position
+    Vector3 getPosition() const;
 
-        if (position_.x < left) {
-            position_.x = right;
-        } else if (position_.x > right) {
-            position_.x = left;
-        }
-
-        // Check if the object goes off the top or bottom side
-        if (position_.y > top) {
-            position_.y = bottom;
-        } else if (position_.y < bottom) {
-            position_.y = top;
-        }
-
-        // Update the mesh position to reflect the wrapped position
-        if (mesh_) {
-            mesh_->position.copy(position_);
-        }
-    }
-
-    //Function to return radius "(default is 0.5)"
-    virtual float getRadius() const {
-        return 0.5f;
-    }
-
-    void setPosition(const Vector3& position) { position_ = position; }
-    Vector3 getPosition() const { return position_; }
-
-    void setVelocity(const Vector3& velocity) { velocity_ = velocity; }
-    Vector3 getVelocity() const { return velocity_; }
-
-    void setAcceleration(const Vector3& acceleration) { acceleration_ = acceleration; }
-    Vector3 getAcceleration() const { return acceleration_; }
-
-    void setMass(float mass) { mass_ = mass; }
-    float getMass() const { return mass_; }
-
-    // Accessor for mesh (to be defined by derived class)
-    std::shared_ptr<Mesh> getMesh() const { return mesh_; }
+    // Getter for the radius (for collision detection)
+    virtual float getRadius() const;
 
 protected:
-    // Common attributes
     Vector3 position_;
     Vector3 velocity_;
     Vector3 acceleration_;
     float mass_;
-
-    // Mesh, to be initialized in derived classes
     std::shared_ptr<Mesh> mesh_;
 };
 
