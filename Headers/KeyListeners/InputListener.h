@@ -5,56 +5,19 @@
 #include "Sprites/Player.h"
 #include "Sprites/Bullet.h"
 #include <set>
-#include <iostream>
-
+#include <vector>
 
 using namespace threepp;
 
 class InputListener : public KeyListener, public MouseListener {
 public:
-    explicit InputListener(Scene& scene, Player& player, std::vector<std::shared_ptr<Bullet>>& bullets)
-        : scene(scene), player(player), bullets(bullets), addedPlayer(true) {
-        scene.add(player.getMesh());
-    }
+    explicit InputListener(Scene& scene, Player& player, std::vector<std::shared_ptr<Bullet>>& bullets);
 
-    void onKeyPressed(KeyEvent evt) override {
-        keysPressed.insert(evt.key);
-        keysReleased.erase(evt.key);
-    }
+    void onKeyPressed(KeyEvent evt) override;
+    void onKeyReleased(KeyEvent evt) override;
+    void onMouseDown(int button, const Vector2& pos) override; // For testing only; can be removed later
 
-    void onKeyReleased(KeyEvent evt) override {
-        keysPressed.erase(evt.key);
-        keysReleased.insert(evt.key);
-    }
-
-    // Delete later for testing only
-    void onMouseDown(int button, const Vector2& pos) override {
-        if (button == 0) {
-            std::cout << "Mouse pressed at position: " << pos.x << ", " << pos.y << std::endl;
-        }
-    }
-
-    // Updates player actions
-    void updateActions(float deltaTime) {
-        // Handle rotation
-        if (isKeyPressed(Key::A)) {
-            player.rotate(1.0f, deltaTime);
-        }
-        if (isKeyPressed(Key::D)) {
-            player.rotate(-1.0f, deltaTime);
-        }
-
-        // Handle thrust
-        if (isKeyPressed(Key::W)) {
-            player.applyThrust(deltaTime);
-        }
-
-        // Handle shooting
-        if (isKeyReleased(Key::SPACE)) {
-            shootBullet();
-            keysReleased.erase(Key::SPACE);
-        }
-    }
+    void updateActions(float deltaTime);
 
 private:
     Scene& scene;
@@ -65,23 +28,9 @@ private:
     std::set<Key> keysPressed;
     std::set<Key> keysReleased;
 
-    // Key press check
-    bool isKeyPressed(Key key) const {
-        return keysPressed.find(key) != keysPressed.end();
-    }
-
-    // Key release check
-    bool isKeyReleased(Key key) const {
-        return keysReleased.find(key) != keysReleased.end();
-    }
-
-    // Shoots a bullet from the player's current position and direction
-    // Includes code from ChatGPT
-    void shootBullet() {
-        auto bullet = std::make_shared<Bullet>(player.getPosition(), player.getRotationAngle(), 15.0f, Color::yellow);
-        bullets.push_back(bullet);
-        scene.add(bullet->getMesh());
-    }
+    bool isKeyPressed(Key key) const;
+    bool isKeyReleased(Key key) const;
+    void shootBullet();
 };
 
 #endif // INPUTLISTENER_HPP

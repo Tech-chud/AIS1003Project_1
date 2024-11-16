@@ -18,7 +18,7 @@ FetchContent_MakeAvailable(threepp)
 
 add_executable(AsteroidProj src/main.cpp)
 
-target_link_libraries(AsteroidProj PRIVATE threepp:threepp)
+target_link_libraries(AsteroidProj PRIVATE threepp::threepp)
 
 add_subdirectory(src)
 add_subdirectory(tests)

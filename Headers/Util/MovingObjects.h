@@ -5,6 +5,7 @@
 #define MOVINGOBJECTS_H
 #include "threepp/threepp.hpp"
 
+
 using namespace threepp;
 
 class MovingObject {
@@ -22,7 +23,10 @@ public:
     void applyPhysics(float deltaTime);
 
     // Method to wrap the object around the screen if it goes out of bounds
-    void checkAndWrap(float left, float right, float top, float bottom);
+    void checkPosAndWrap(float left, float right, float top, float bottom);
+
+    // Method to set the velocity of the object
+    void setVelocity(const Vector3& velocity);
 
     // Getter for the mesh
     std::shared_ptr<Mesh> getMesh() const;

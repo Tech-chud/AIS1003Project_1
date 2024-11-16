@@ -73,7 +73,7 @@ int main() {
         // Update all asteroids
         for (auto &asteroid: asteroids) {
             asteroid->update(deltaTime); // Update the asteroid's position and behavior
-            asteroid->CheckPosAndWrap(left, right, top, bottom); // Handles wrapping
+            asteroid->checkPosAndWrap(left, right, top, bottom); // Handles wrapping
         }
 
         // Update player actions
@@ -126,7 +126,7 @@ int main() {
 
         // Update player position and handle wrapping
         player.update(deltaTime);
-        player.CheckPosAndWrap(left, right, top, bottom);
+        player.checkPosAndWrap(left, right, top, bottom);
 
         renderer.render(*scene, *camera);
     });
