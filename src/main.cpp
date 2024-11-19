@@ -12,13 +12,12 @@
 using namespace threepp;
 
 int main() {
+    Clock clock;
     Canvas canvas("2D Asteroids");
     GLRenderer renderer(canvas.size());
 
-
     auto scene = Scene::create();
     scene->background = Color::black;
-
 
     float left = -canvas.aspect() * 5;
     float right = canvas.aspect() * 5;
@@ -26,22 +25,6 @@ int main() {
     float bottom = -5;
     auto camera = OrthographicCamera::create(left, right, top, bottom, 0.1f, 100);
     camera->position.z = 10;
-
-    // List to store multiple asteroids
-    std::vector<std::shared_ptr<Asteroid> > asteroids;
-    // LIst to store bullets
-    std::vector<std::shared_ptr<Bullet> > bullets;
-
-
-    Clock clock;
-
-    // Create player object
-    Player player(Vector3(0, 0, 0), 1.0f, Color::white);
-    scene->add(player.getMesh());
-
-    // Variables for random asteroid spawning time intervals
-    float timeSinceLastSpawn = 0.0f;
-    float spawnInterval = RandomGen::randomFloat(2.0f, 10.0f);
 
     // Handle window resizing
     canvas.onWindowResize([&](WindowSize size) {
@@ -51,24 +34,28 @@ int main() {
         renderer.setSize(size);
     });
 
+    // Asteroid list
+    std::vector<std::shared_ptr<Asteroid> > asteroids;
+    // Bullet List
+    std::vector<std::shared_ptr<Bullet> > bullets;
+
+    // Create player object
+    Player player(Vector3(0, 0, 0), 1.0f, Color::white);
+    scene->add(player.getMesh());
+
+    Asteroid::initializeSpawnTimers();
+
     // Input Listeners
     InputListener listener(*scene, player, bullets);
     canvas.addKeyListener(listener);
     canvas.addMouseListener(listener);
 
-
     canvas.animate([&]() {
         float deltaTime = clock.getDelta();
-        timeSinceLastSpawn += deltaTime;
 
         // Spawn asteroids
-        if (timeSinceLastSpawn >= spawnInterval && asteroids.size() < 20) {
-            auto asteroid = Asteroid::spawnAsteroid(left, right, top, bottom, *scene);
-            asteroids.push_back(asteroid);
+        Asteroid::handleAsteroidSpawning(deltaTime, left, right, top, bottom, asteroids, *scene);
 
-            timeSinceLastSpawn = 0.0f;
-            spawnInterval = RandomGen::randomFloat(1.0f, 2.0f);
-        }
 
         // Update all asteroids
         for (auto &asteroid: asteroids) {
@@ -122,7 +109,6 @@ int main() {
         }
 
         // TEST END]
-
 
         // Update player position and handle wrapping
         player.update(deltaTime);

@@ -21,7 +21,19 @@ public:
 
     // Return "radius" of Asteroid for collision detection
     float getRadius() const override;
+
+    // Static methods to manage asteroid spawning
+    static void initializeSpawnTimers();
+    static void handleAsteroidSpawning(float deltaTime, float left, float right, float top, float bottom,
+                                       std::vector<std::shared_ptr<Asteroid>>& asteroids, Scene& scene);
+
+
+private:
+    static float timeSinceLastSpawn;
+    static float spawnInterval;
 };
+
+
 
 #endif // ASTEROID_HPP
 
