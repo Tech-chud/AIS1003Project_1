@@ -1,4 +1,5 @@
 #include "threepp/threepp.hpp"
+#include "GameSystem/GameInit.h"
 #include "Sprites/Asteroid.h"
 #include "Sprites/Player.h"
 #include "Sprites/Bullet.h"
@@ -13,26 +14,20 @@ using namespace threepp;
 
 int main() {
     Clock clock;
-    Canvas canvas("2D Asteroids");
-    GLRenderer renderer(canvas.size());
 
-    auto scene = Scene::create();
-    scene->background = Color::black;
+    GameInit::Init();
 
-    float left = -canvas.aspect() * 5;
-    float right = canvas.aspect() * 5;
-    float top = 5;
-    float bottom = -5;
-    auto camera = OrthographicCamera::create(left, right, top, bottom, 0.1f, 100);
-    camera->position.z = 10;
+    // Retrieve initialized objects temp since things here will be refractored allso helped from ChatGPT here early on for canvas and such
+    Canvas& canvas = GameInit::getCanvas();
+    GLRenderer& renderer = GameInit::getRenderer();
+    std::shared_ptr<Scene>& scene = GameInit::getScene();
+    std::shared_ptr<OrthographicCamera>& camera = GameInit::getCamera();
 
-    // Handle window resizing
-    canvas.onWindowResize([&](WindowSize size) {
-        camera->left = -size.aspect() * 5;
-        camera->right = size.aspect() * 5;
-        camera->updateProjectionMatrix();
-        renderer.setSize(size);
-    });
+    // Retrieve camera bounds
+    float left, right, top, bottom;
+    GameInit::getBounds(left, right, top, bottom);
+
+
 
     // Asteroid list
     std::vector<std::shared_ptr<Asteroid> > asteroids;
