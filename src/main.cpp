@@ -17,7 +17,7 @@ int main() {
 
     GameInit::Init();
 
-    // Retrieve initialized objects temp since things here will be refractored allso helped from ChatGPT here early on for canvas and such
+    // Retrieve initialized objects help from ChatGPT here early on for canvas and such
     Canvas& canvas = GameInit::getCanvas();
     GLRenderer& renderer = GameInit::getRenderer();
     std::shared_ptr<Scene>& scene = GameInit::getScene();
@@ -27,7 +27,7 @@ int main() {
     float left, right, top, bottom;
     GameInit::getBounds(left, right, top, bottom);
 
-
+    Asteroid::initializeSpawnTimers();
 
     // Asteroid list
     std::vector<std::shared_ptr<Asteroid> > asteroids;
@@ -38,8 +38,6 @@ int main() {
     Player player(Vector3(0, 0, 0), 1.0f, Color::white);
     scene->add(player.getMesh());
 
-    Asteroid::initializeSpawnTimers();
-
     // Input Listeners
     InputListener listener(*scene, player, bullets);
     canvas.addKeyListener(listener);
@@ -48,15 +46,11 @@ int main() {
     canvas.animate([&]() {
         float deltaTime = clock.getDelta();
 
-        // Spawn asteroids
-        Asteroid::handleAsteroidSpawning(deltaTime, left, right, top, bottom, asteroids, *scene);
+        // Spawn, update, and wrap asteroids
+        Asteroid::updateAsteroids(deltaTime, left, right, top, bottom, asteroids, *scene);
 
-
-        // Update all asteroids
-        for (auto &asteroid: asteroids) {
-            asteroid->update(deltaTime); // Update the asteroid's position and behavior
-            asteroid->checkPosAndWrap(left, right, top, bottom); // Handles wrapping
-        }
+        // Update player actions
+        listener.updateActions(deltaTime);
 
         // Update player actions
         listener.updateActions(deltaTime);
@@ -67,7 +61,7 @@ int main() {
             auto &bullet = *it;
             bullet->update(deltaTime);
 
-            // Remove inactive bullets
+            // Remove inactive bullets based on lifespan
             if (!bullet->isActiveBullet()) {
                 scene->remove(*bullet->getMesh());
                 it = bullets.erase(it);
