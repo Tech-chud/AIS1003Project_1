@@ -28,7 +28,7 @@ float Asteroid::getRadius() const {
 // Initialize spawn timers
 void Asteroid::initializeSpawnTimers() {
     timeSinceLastSpawn = 0.0f;
-    spawnInterval = RandomGen::randomFloat(0.1f, 0.1f);
+    spawnInterval = RandomGen::randomFloat(1.0f, 2.5f);
 }
 
 // Spawn a new asteroid
@@ -80,12 +80,12 @@ void Asteroid::updateAsteroids(
 
     timeSinceLastSpawn += deltaTime;
 
-    if (timeSinceLastSpawn >= spawnInterval && asteroids.size() < 20000) {
+    if (timeSinceLastSpawn >= spawnInterval && asteroids.size() < 200) { //TEMP MAX LIMIT FOR TESTING
         auto asteroid = spawnAsteroid(left, right, top, bottom, scene);
         asteroids.push_back(asteroid);
 
         timeSinceLastSpawn = 0.0f;
-        spawnInterval = RandomGen::randomFloat(0.001f, 0.001f);
+        spawnInterval = RandomGen::randomFloat(1.0f, 2.5f);
     }
 
     for (auto& asteroid : asteroids) {
