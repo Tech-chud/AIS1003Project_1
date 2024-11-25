@@ -9,6 +9,7 @@
 #include "Util/RandomGen.h"
 #include "Util/MovingObjects.h"
 #include <vector>
+#include <iostream>
 
 
 using namespace threepp;
@@ -57,23 +58,10 @@ int main() {
         listener.updateActions(deltaTime);
 
         // Update all bullets
-        // Includes ChatGPT code
-        for (auto it = bullets.begin(); it != bullets.end();) {
-            auto &bullet = *it;
-            bullet->update(deltaTime);
-
-            // Remove inactive bullets based on lifespan
-            if (!bullet->isActiveBullet()) {
-                scene->remove(*bullet->getMesh());
-                it = bullets.erase(it);
-            } else {
-                ++it;
-            }
-        }
+        Bullet::updateBullets(deltaTime, bullets, scene);
 
         // Handle collisions between bullets and asteroids
         InelasticCollision::handleCollisions(asteroids, bullets, scene);
-
 
         // Update player position and handle wrapping
         player.update(deltaTime);
