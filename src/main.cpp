@@ -17,7 +17,7 @@ int main() {
 
     GameInit::Init();
 
-    // Retrieve initialized objects help from ChatGPT here early on for canvas and such
+    // Retrieve initialized objects. Help from ChatGPT here early on for canvas and such
     Canvas& canvas = GameInit::getCanvas();
     GLRenderer& renderer = GameInit::getRenderer();
     std::shared_ptr<Scene>& scene = GameInit::getScene();
