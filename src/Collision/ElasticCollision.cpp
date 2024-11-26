@@ -2,6 +2,7 @@
 #include "threepp/threepp.hpp"
 #include <cmath>
 #include <iostream>
+#include <unordered_set> //Had problems with multi-colision on same asteroid asked chatgpt and they used this as a dependancy dont know if ill keep this
 
 
 void ElasticCollision::handleCollisions(std::vector<std::shared_ptr<Asteroid>>& asteroids) {
@@ -57,38 +58,47 @@ void ElasticCollision::handleCollisions(std::vector<std::shared_ptr<Asteroid>>& 
 }
 
 void ElasticCollision::handleAsteroidPlayerCollision(
+    // GPT Was used here for general math questions
+    // and for faultfinding a problem with a reccuring problem with an asteroid giving multiple colisions to player even in cooldown
     std::vector<std::shared_ptr<Asteroid>>& asteroids,
     Player& player,
     std::shared_ptr<threepp::Scene>& scene,
     float deltaTime) {
-
     static float collisionCooldown = 0.0f;
-    static std::shared_ptr<Asteroid> collidingAsteroid = nullptr;
+    static std::unordered_set<std::shared_ptr<Asteroid>> collidingAsteroids;
 
+    // Cooldown logic
     if (collisionCooldown > 0.0f) {
         collisionCooldown -= deltaTime;
 
-        // Visual indicator: Player is in cooldown
         player.setColor(threepp::Color::red);
 
-        // Check if the player is still colliding with the same asteroid
-        if (collidingAsteroid && BaseCollisionDetector::hasCollided(collidingAsteroid, player)) {
-            // If still colliding, reset cooldown
-            collisionCooldown = 1.0f;
-            return;
-        } else {
-            // If no longer colliding, reset the collidingAsteroid pointer
-            collidingAsteroid = nullptr;
+        // Remove asteroids that are no longer colliding
+        for (auto it = collidingAsteroids.begin(); it != collidingAsteroids.end();) {
+            if (!BaseCollisionDetector::hasCollided(*it, player)) {
+                it = collidingAsteroids.erase(it);
+            } else {
+                ++it;
+            }
         }
+
+        return; // Skip further collision handling during cooldown
     } else {
-        // Visual indicator: Player is out of cooldown
         player.setColor(threepp::Color::white);
     }
 
     for (auto& asteroid : asteroids) {
+        // If already colliding with this asteroid, skip
+        if (collidingAsteroids.find(asteroid) != collidingAsteroids.end()) {
+            continue;
+        }
+
         // Check for collision between the player and the asteroid
         if (BaseCollisionDetector::hasCollided(asteroid, player) && collisionCooldown <= 0.0f) {
             std::cout << "Asteroid-Player collision detected!" << std::endl;
+
+            // Add the asteroid to the colliding set
+            collidingAsteroids.insert(asteroid);
 
             // Get positions and velocities
             threepp::Vector3 asteroidVelocity = asteroid->getVelocity();
@@ -110,7 +120,7 @@ void ElasticCollision::handleAsteroidPlayerCollision(
                 continue;
             }
 
-            // Masses
+            // Masses (Currently not used maybe later if i decide to make splitting asteroids)
             float asteroidMass = asteroid->getMass();
             float playerMass = player.getMass();
 
@@ -121,16 +131,18 @@ void ElasticCollision::handleAsteroidPlayerCollision(
             // Compute impulse vector
             threepp::Vector3 impulseVector = collisionNormal * impulse;
 
-            // Update asteroid velocity
+            // Update asteroid velocity based on player's velocity
             asteroidVelocity += impulseVector / asteroidMass;
             asteroid->setVelocity(asteroidVelocity);
 
-            // Set cooldown and track colliding asteroid
-            collisionCooldown = 1.0f; // Cooldown in seconds
-            collidingAsteroid = asteroid;
+            // Slight backwards nudge on player on colision
+            threepp::Vector3 nudgeVector = collisionNormal * -0.5f;
+            player.setVelocity(nudgeVector);
 
-            // Break out of loop to prevent multiple collisions in the same frame
-            break;
+            // Set collision cooldown "invis frames"
+            collisionCooldown = 1.0f; // Cooldown in seconds
+
+            break; // Only process one collision per frame
         }
     }
 }

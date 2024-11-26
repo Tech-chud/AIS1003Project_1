@@ -43,7 +43,7 @@ float Asteroid::getMass() const {
 // Initialize spawn timers
 void Asteroid::initializeSpawnTimers() {
     timeSinceLastSpawn = 0.0f;
-    spawnInterval = RandomGen::randomFloat(1.0f, 2.5f);
+    spawnInterval = RandomGen::randomFloat(3.0f, 5.0f);
 }
 
 // Spawn a new asteroid
@@ -100,7 +100,7 @@ void Asteroid::updateAsteroids(
         asteroids.push_back(asteroid);
 
         timeSinceLastSpawn = 0.0f;
-        spawnInterval = RandomGen::randomFloat(1.0f, 2.5f);
+        spawnInterval = RandomGen::randomFloat(2.0f, 5.0f);
     }
 
     for (auto& asteroid : asteroids) {
