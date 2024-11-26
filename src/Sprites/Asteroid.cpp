@@ -22,7 +22,22 @@ void Asteroid::update(float deltaTime) {
 
 // Get the radius for collision detection
 float Asteroid::getRadius() const {
-    return 1.0f;
+    return 0.5f;
+}
+
+// Getter for velocity
+const threepp::Vector3& Asteroid::getVelocity() const {
+    return velocity_;
+}
+
+// Setter for velocity
+void Asteroid::setVelocity(const threepp::Vector3& velocity) {
+    velocity_ = velocity;
+}
+
+// Getter for mass
+float Asteroid::getMass() const {
+    return mass_;
 }
 
 // Initialize spawn timers

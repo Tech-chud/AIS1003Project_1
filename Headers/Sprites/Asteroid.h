@@ -9,8 +9,6 @@ class Asteroid : public MovingObject {
 public:
     // Constructor
     Asteroid(const threepp::Vector3& position, float mass, const threepp::Color& color);
-    
-
 
     // Update method for derived class
     void update(float deltaTime) override;
@@ -22,6 +20,15 @@ public:
 
     // Return radius for collision detection
     float getRadius() const override;
+
+    // Getter for velocity
+    const threepp::Vector3& getVelocity() const;
+
+    // Setter for velocity
+    void setVelocity(const threepp::Vector3& velocity);
+
+    // Getter for mass
+    float getMass() const;
 
     // Static method to initialize spawn timers
     static void initializeSpawnTimers();

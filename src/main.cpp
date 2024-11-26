@@ -10,6 +10,7 @@
 #include "Util/MovingObjects.h"
 #include <vector>
 #include <iostream>
+#include <Collision/ElasticCollision.h>
 
 
 using namespace threepp;
@@ -62,6 +63,9 @@ int main() {
 
         // Handle collisions between bullets and asteroids
         InelasticCollision::handleCollisions(asteroids, bullets, scene);
+
+        // Handle collisions between Asteroids
+        ElasticCollision::handleCollisions(asteroids);
 
         // Update player position and handle wrapping
         player.update(deltaTime);
