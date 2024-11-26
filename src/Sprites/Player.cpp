@@ -44,7 +44,7 @@ float Player::getRotationAngle() const {
 }
 
 float Player::getRadius() const {
-    return 0.5f;
+    return 0.2f;
 }
 
 Vector3 Player::getVelocity() const {
