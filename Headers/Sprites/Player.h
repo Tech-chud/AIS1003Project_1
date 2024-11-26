@@ -3,34 +3,38 @@
 
 #include "Util/MovingObjects.h"
 #include "threepp/threepp.hpp"
+#include <cmath>
 
 using namespace threepp;
 
 class Player : public MovingObject {
 public:
-    // Constructor with initial position and color
+    static std::shared_ptr<Player> create(const Vector3& position, float mass, const Color& color);
+
     Player(const Vector3& position, float mass, const Color& color);
 
-    // Rotate the player based on input, with dt
     void rotate(float direction, float deltaTime);
-
-    // Apply thrust in the forward direction, adjusted for upward initial orientation
     void applyThrust(float deltaTime);
+    void update(float deltaTime);
 
-    // Update the player position
-    void update(float deltaTime) override;
-
-    // Getter for rotation angle
     float getRotationAngle() const;
+    float getRadius() const;
 
-    // Return "radius" of Player for collision detection
-    float getRadius() const override;
+    Vector3 getVelocity() const;
+    void setVelocity(const Vector3& velocity);
+
+    float getMass() const;
+    void setMass(float mass);
+
+    void setColor(const Color& color); // Method to change the player's color
 
 private:
     float rotationAngle;
     float thrustPower;
     float maxSpeed;
     float rotationSpeed;
+
+    std::shared_ptr<MeshBasicMaterial> material_;
 };
 
 #endif // PLAYER_HPP

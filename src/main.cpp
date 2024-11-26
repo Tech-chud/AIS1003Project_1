@@ -61,10 +61,13 @@ int main() {
         // Update all bullets
         Bullet::updateBullets(deltaTime, bullets, scene);
 
-        // Handle collisions between bullets and asteroids
+        // Asteroid-player collisions
+        ElasticCollision::handleAsteroidPlayerCollision(asteroids, player, scene, deltaTime);
+
+        // Collisions between bullets and asteroids
         InelasticCollision::handleCollisions(asteroids, bullets, scene);
 
-        // Handle collisions between Asteroids
+        // Collisions between Asteroids
         ElasticCollision::handleCollisions(asteroids);
 
         // Update player position and handle wrapping

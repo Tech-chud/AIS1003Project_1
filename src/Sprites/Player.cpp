@@ -9,6 +9,8 @@ Player::Player(const Vector3& position, float mass, const Color& color)
 
     mesh_ = Mesh::create(geometry, material);
     mesh_->position.copy(position_);
+
+    material_ = material;
 }
 
 void Player::rotate(float direction, float deltaTime) {
@@ -43,4 +45,24 @@ float Player::getRotationAngle() const {
 
 float Player::getRadius() const {
     return 0.5f;
+}
+
+Vector3 Player::getVelocity() const {
+    return velocity_;
+}
+
+void Player::setVelocity(const Vector3& velocity) {
+    velocity_ = velocity;
+}
+
+float Player::getMass() const {
+    return mass_;
+}
+
+void Player::setMass(float mass) {
+    mass_ = mass;
+}
+
+void Player::setColor(const Color& color) {
+    material_->color = color;
 }
