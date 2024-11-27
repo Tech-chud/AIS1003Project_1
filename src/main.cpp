@@ -55,8 +55,17 @@ int main() {
     canvas.addKeyListener(listener);
     canvas.addMouseListener(listener);
 
+    const float scoreMult = 0.05f; // Destroying asteroids score also dependant on how long you survive
+
     canvas.animate([&]() {
         float deltaTime = clock.getDelta();
+        timeAlive += deltaTime; // Increment time alive
+
+
+        // Update HUD values
+        hud.updateHealth(health);
+        hud.updateScore(score);
+        hud.updateTimeAlive(timeAlive);
 
         // Spawn, update, and wrap asteroids
         Asteroid::updateAsteroids(deltaTime, left, right, top, bottom, asteroids, *scene);
@@ -74,7 +83,7 @@ int main() {
         ElasticCollision::handleAsteroidPlayerCollision(asteroids, player, scene, deltaTime);
 
         // Collisions between bullets and asteroids
-        InelasticCollision::handleCollisions(asteroids, bullets, scene);
+        InelasticCollision::handleCollisions(asteroids, bullets, scene, score, timeAlive, scoreMult);
 
         // Collisions between Asteroids
         ElasticCollision::handleCollisions(asteroids);
@@ -86,7 +95,7 @@ int main() {
         renderer.render(*scene, *camera);
 
         // Render HUD
-        hud.render(renderer);
+        hud.render(renderer); //Do not put above renderer.render(scene,camera) will not render then.
     });
 
     return 0;

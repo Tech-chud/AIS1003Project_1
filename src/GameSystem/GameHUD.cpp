@@ -8,17 +8,32 @@ GameHUD::GameHUD(const threepp::WindowSize& size) : hud_(size) {
         threepp::FontLoader fontLoader;
         const auto font = fontLoader.defaultFont();
 
-
         // Create TextGeometry options
-        threepp::TextGeometry::Options opts(font, 10, 5); // Larger font size for testing
+        threepp::TextGeometry::Options opts(font, 15, 5);
 
-        // Test text
-        scoreText_ = std::make_shared<threepp::Text2D>(opts, "Test HUD");
-        scoreText_->setColor(threepp::Color::red);
+        // Health text
+        healthText_ = std::make_shared<threepp::Text2D>(opts, "Health: 100");
+        healthText_->setColor(threepp::Color::green);
+        hud_.add(*healthText_, threepp::HUD::Options()
+                                  .setNormalizedPosition({0.0f, 1.0f}) // Top-left corner
+                                  .setVerticalAlignment(threepp::HUD::VerticalAlignment::TOP)
+                                  .setHorizontalAlignment(threepp::HUD::HorizontalAlignment::LEFT));
+
+        // Score text
+        scoreText_ = std::make_shared<threepp::Text2D>(opts, "Score: 0");
+        scoreText_->setColor(threepp::Color::white);
         hud_.add(*scoreText_, threepp::HUD::Options()
-                                  .setNormalizedPosition({0.5f, 0.5f}) // Center the text
-                                  .setVerticalAlignment(threepp::HUD::VerticalAlignment::CENTER)
-                                  .setHorizontalAlignment(threepp::HUD::HorizontalAlignment::CENTER));
+                                  .setNormalizedPosition({0.0f, 0.95f}) // Below Health
+                                  .setVerticalAlignment(threepp::HUD::VerticalAlignment::TOP)
+                                  .setHorizontalAlignment(threepp::HUD::HorizontalAlignment::LEFT));
+
+        // Time Alive text
+        timeText_ = std::make_shared<threepp::Text2D>(opts, "Time Alive: 0");
+        timeText_->setColor(threepp::Color::yellow);
+        hud_.add(*timeText_, threepp::HUD::Options()
+                                 .setNormalizedPosition({0.0f, 0.90f}) // Below Score
+                                 .setVerticalAlignment(threepp::HUD::VerticalAlignment::TOP)
+                                 .setHorizontalAlignment(threepp::HUD::HorizontalAlignment::LEFT));
 
         std::cout << "HUD initialized successfully." << std::endl;
     } catch (const std::exception& e) {
@@ -26,14 +41,24 @@ GameHUD::GameHUD(const threepp::WindowSize& size) : hud_(size) {
     }
 }
 
+void GameHUD::updateHealth(int health) {
+    healthText_->setText("Health: " + std::to_string(health));
+}
+
+void GameHUD::updateScore(int score) {
+    scoreText_->setText("Score: " + std::to_string(score));
+}
+
+void GameHUD::updateTimeAlive(float timeAlive) {
+    timeText_->setText("Time Alive: " + std::to_string(static_cast<int>(timeAlive)));
+}
 
 void GameHUD::render(threepp::GLRenderer& renderer) {
     try {
-        renderer.autoClear = false; // Prevent HUD from clearing the render target
-        hud_.apply(renderer);      // Render the HUD on top of the scene
+        renderer.autoClear = false; // Prevent clearing the render target
+        hud_.apply(renderer);
         renderer.autoClear = true; // Reset autoClear for future renders
     } catch (const std::exception& e) {
-        std::cerr << "Exception while rendering HUD: " << e.what() << std::endl; // TEMP TEST COUSE PROBLEMS :DDDDDDDDDDDDDDDDD
+        std::cerr << "Exception while rendering HUD: " << e.what() << std::endl;
     }
 }
-
