@@ -1,5 +1,6 @@
 #include "threepp/threepp.hpp"
 #include "GameSystem/GameInit.h"
+#include "GameSystem/GameHUD.h"
 #include "Sprites/Asteroid.h"
 #include "Sprites/Player.h"
 #include "Sprites/Bullet.h"
@@ -21,14 +22,22 @@ int main() {
     GameInit::Init();
 
     // Retrieve initialized objects. Help from ChatGPT here early on for canvas and such
-    Canvas& canvas = GameInit::getCanvas();
-    GLRenderer& renderer = GameInit::getRenderer();
-    std::shared_ptr<Scene>& scene = GameInit::getScene();
-    std::shared_ptr<OrthographicCamera>& camera = GameInit::getCamera();
+    Canvas &canvas = GameInit::getCanvas();
+    GLRenderer &renderer = GameInit::getRenderer();
+    std::shared_ptr<Scene> &scene = GameInit::getScene();
+    std::shared_ptr<OrthographicCamera> &camera = GameInit::getCamera();
 
     // Retrieve camera bounds
     float left, right, top, bottom;
     GameInit::getBounds(left, right, top, bottom);
+
+    // Initialize HUD
+    GameHUD hud(canvas.size());
+
+    // TEMP
+    int score = 0; // Player score
+    int health = 100; // Player health
+    float timeAlive = 0.0f; // Time alive in seconds
 
     Asteroid::initializeSpawnTimers();
 
@@ -75,6 +84,9 @@ int main() {
         player.checkPosAndWrap(left, right, top, bottom);
 
         renderer.render(*scene, *camera);
+
+        // Render HUD
+        hud.render(renderer);
     });
 
     return 0;
