@@ -34,10 +34,11 @@ int main() {
     // Initialize HUD
     GameHUD hud(canvas.size());
 
-    // TEMP
-    int score = 0; // Player score
-    int health = 100; // Player health
-    float timeAlive = 0.0f; // Time alive in seconds
+    // Set player data
+    int score = 0;
+    int health = 100;
+    float timeAlive = 0.0f;
+    bool gameOver = false;
 
     Asteroid::initializeSpawnTimers();
 
@@ -54,49 +55,61 @@ int main() {
     InputListener listener(*scene, player, bullets);
     canvas.addKeyListener(listener);
     canvas.addMouseListener(listener);
+    // Reset pass
+    listener.setRestartCallback([&]() {
+        GameInit::restart(score, health, timeAlive, gameOver, asteroids, bullets, player, hud);
+    });
+
 
     const float scoreMult = 0.05f; // Destroying asteroids score also dependant on how long you survive
     const float damageMult = 3.0f; // Damage based on Velocity*damageMult
 
     canvas.animate([&]() {
         float deltaTime = clock.getDelta();
-        timeAlive += deltaTime; // Increment time alive
 
+        // Input listener must be outside of game over state so reset is possible
+        listener.updateActions(deltaTime)
+        ;
+        if (!gameOver) {
+            timeAlive += deltaTime; // Increment time alive
 
-        // Update HUD values
-        hud.updateHealth(health);
-        hud.updateScore(score);
-        hud.updateTimeAlive(timeAlive);
+            // Update HUD values
+            hud.updateHealth(health);
+            hud.updateScore(score);
+            hud.updateTimeAlive(timeAlive);
 
-        // Spawn, update, and wrap asteroids
-        Asteroid::updateAsteroids(deltaTime, left, right, top, bottom, asteroids, *scene);
+            // Spawn, update, and wrap asteroids
+            Asteroid::updateAsteroids(deltaTime, left, right, top, bottom, asteroids, *scene);
 
-        // Update player actions
-        listener.updateActions(deltaTime);
+            // Update player actions
+            listener.updateActions(deltaTime);
 
-        // Update player actions
-        listener.updateActions(deltaTime);
+            // Update all bullets
+            Bullet::updateBullets(deltaTime, bullets, scene);
 
-        // Update all bullets
-        Bullet::updateBullets(deltaTime, bullets, scene);
+            // Asteroid-player collisions
+            ElasticCollision::handleAsteroidPlayerCollision(asteroids, player, scene, deltaTime, health, damageMult);
 
-        // Asteroid-player collisions
-        ElasticCollision::handleAsteroidPlayerCollision(asteroids, player, scene, deltaTime, health, damageMult);
+            // Collisions between bullets and asteroids
+            InelasticCollision::handleCollisions(asteroids, bullets, scene, score, timeAlive, scoreMult);
 
-        // Collisions between bullets and asteroids
-        InelasticCollision::handleCollisions(asteroids, bullets, scene, score, timeAlive, scoreMult);
+            // Collisions between Asteroids
+            ElasticCollision::handleCollisions(asteroids);
 
-        // Collisions between Asteroids
-        ElasticCollision::handleCollisions(asteroids);
+            // Update player position and handle wrapping
+            player.update(deltaTime);
+            player.checkPosAndWrap(left, right, top, bottom);
 
-        // Update player position and handle wrapping
-        player.update(deltaTime);
-        player.checkPosAndWrap(left, right, top, bottom);
+            if (health <= 0) {
+                gameOver = true;
+                hud.setGameOverVisible(true);
+            }
+        }
 
         renderer.render(*scene, *camera);
 
-        // Render HUD
-        hud.render(renderer); //Do not put above renderer.render(scene,camera) will not render then.
+
+        hud.render(renderer); //Do not put above renderer.render(scene,camera), it will not render then.
     });
 
     return 0;

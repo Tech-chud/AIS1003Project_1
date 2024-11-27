@@ -4,32 +4,39 @@
 #include "threepp/threepp.hpp"
 #include "Sprites/Player.h"
 #include "Sprites/Bullet.h"
-#include <set>
-#include <vector>
+#include <unordered_set>
+#include <functional> // For std::function
 
 using namespace threepp;
 
 class InputListener : public KeyListener, public MouseListener {
 public:
-    explicit InputListener(Scene& scene, Player& player, std::vector<std::shared_ptr<Bullet>>& bullets);
+    InputListener(Scene& scene, Player& player, std::vector<std::shared_ptr<Bullet>>& bullets);
 
     void onKeyPressed(KeyEvent evt) override;
     void onKeyReleased(KeyEvent evt) override;
-    void onMouseDown(int button, const Vector2& pos) override; // For testing only; can be removed later
+    void onMouseDown(int button, const Vector2& pos) override;
 
     void updateActions(float deltaTime);
+
+    void setRestartCallback(std::function<void()> callback);
 
 private:
     Scene& scene;
     Player& player;
     std::vector<std::shared_ptr<Bullet>>& bullets;
+
+    std::unordered_set<Key> keysPressed;
+    std::unordered_set<Key> keysReleased;
+
     bool addedPlayer;
 
-    std::set<Key> keysPressed;
-    std::set<Key> keysReleased;
+    // Callback for restarting the game
+    std::function<void()> onRestart;
 
     bool isKeyPressed(Key key) const;
     bool isKeyReleased(Key key) const;
+
     void shootBullet();
 };
 

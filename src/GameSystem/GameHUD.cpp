@@ -15,7 +15,7 @@ GameHUD::GameHUD(const threepp::WindowSize& size) : hud_(size) {
         healthText_ = std::make_shared<threepp::Text2D>(opts, "Health: 100");
         healthText_->setColor(threepp::Color::green);
         hud_.add(*healthText_, threepp::HUD::Options()
-                                  .setNormalizedPosition({0.0f, 1.0f}) // Top-left corner
+                                  .setNormalizedPosition({0.0f, 1.0f})
                                   .setVerticalAlignment(threepp::HUD::VerticalAlignment::TOP)
                                   .setHorizontalAlignment(threepp::HUD::HorizontalAlignment::LEFT));
 
@@ -23,17 +23,25 @@ GameHUD::GameHUD(const threepp::WindowSize& size) : hud_(size) {
         scoreText_ = std::make_shared<threepp::Text2D>(opts, "Score: 0");
         scoreText_->setColor(threepp::Color::white);
         hud_.add(*scoreText_, threepp::HUD::Options()
-                                  .setNormalizedPosition({0.0f, 0.95f}) // Below Health
+                                  .setNormalizedPosition({0.0f, 0.95f})
                                   .setVerticalAlignment(threepp::HUD::VerticalAlignment::TOP)
                                   .setHorizontalAlignment(threepp::HUD::HorizontalAlignment::LEFT));
 
         // Time Alive text
         timeText_ = std::make_shared<threepp::Text2D>(opts, "Time Alive: 0");
-        timeText_->setColor(threepp::Color::yellow);
+        timeText_->setColor(threepp::Color::white);
         hud_.add(*timeText_, threepp::HUD::Options()
-                                 .setNormalizedPosition({0.0f, 0.90f}) // Below Score
+                                 .setNormalizedPosition({0.0f, 0.90f})
                                  .setVerticalAlignment(threepp::HUD::VerticalAlignment::TOP)
                                  .setHorizontalAlignment(threepp::HUD::HorizontalAlignment::LEFT));
+
+        // Game Over text
+        gameOverText_ = std::make_shared<threepp::Text2D>(opts, "");
+        gameOverText_->setColor(threepp::Color::red);
+        hud_.add(*gameOverText_, threepp::HUD::Options()
+                                     .setNormalizedPosition({0.4f, 0.5f})
+                                     .setVerticalAlignment(threepp::HUD::VerticalAlignment::CENTER)
+                                     .setHorizontalAlignment(threepp::HUD::HorizontalAlignment::CENTER));
 
         std::cout << "HUD initialized successfully." << std::endl;
     } catch (const std::exception& e) {
@@ -51,6 +59,16 @@ void GameHUD::updateScore(int score) {
 
 void GameHUD::updateTimeAlive(float timeAlive) {
     timeText_->setText("Time Alive: " + std::to_string(static_cast<int>(timeAlive)));
+}
+
+void GameHUD::setGameOverVisible(bool visible) {
+    gameOverVisible_ = visible;
+    if (gameOverVisible_) {
+        gameOverText_->setText("Game Over"
+                               "\nPress R to restart");
+    } else {
+        gameOverText_->setText(""); // Clear the text when not visible
+    }
 }
 
 void GameHUD::render(threepp::GLRenderer& renderer) {

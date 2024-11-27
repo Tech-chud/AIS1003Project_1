@@ -16,7 +16,6 @@ void InputListener::onKeyReleased(KeyEvent evt) {
     keysReleased.insert(evt.key);
 }
 
-// For testing; can be removed or adjusted as needed
 void InputListener::onMouseDown(int button, const Vector2& pos) {
     if (button == 0) {
         std::cout << "Mouse pressed at position: " << pos.x << ", " << pos.y << std::endl;
@@ -42,6 +41,18 @@ void InputListener::updateActions(float deltaTime) {
         shootBullet();
         keysReleased.erase(Key::SPACE);
     }
+
+    // Handle restart
+    if (isKeyReleased(Key::R)) {
+        if (onRestart) {
+            onRestart();
+        }
+        keysReleased.erase(Key::R);
+    }
+}
+
+void InputListener::setRestartCallback(std::function<void()> callback) {
+    onRestart = std::move(callback);
 }
 
 bool InputListener::isKeyPressed(Key key) const {
@@ -52,14 +63,10 @@ bool InputListener::isKeyReleased(Key key) const {
     return keysReleased.find(key) != keysReleased.end();
 }
 
-//When refactoring i had some problems, GPT helped with this (commented faultfinding code)
+//When refactoring i had some problems, GPT helped with this
 void InputListener::shootBullet() {
     auto bullet = std::make_shared<Bullet>(player.getPosition(), player.getRotationAngle(), 15.0f, Color::yellow);
     bullets.push_back(bullet);
     scene.add(bullet->getMesh());
 
-    /*std::cout << "Bullet spawned! Total bullets: " << bullets.size() << std::endl;
-    std::cout << "Bullet position: (" << bullet->getPosition().x << ", "
-              << bullet->getPosition().y << ", "
-              << bullet->getPosition().z << ")" << std::endl;*/
 }

@@ -1,7 +1,7 @@
 #include "Sprites/Asteroid.h"
 #include "Util/RandomGen.h"
 
-// Static variables for spawning timers
+// Default variables
 float Asteroid::timeSinceLastSpawn = 0.0f;
 float Asteroid::spawnInterval = RandomGen::randomFloat(2.0f, 10.0f);
 
@@ -99,8 +99,11 @@ void Asteroid::updateAsteroids(
         auto asteroid = spawnAsteroid(left, right, top, bottom, scene);
         asteroids.push_back(asteroid);
 
+        const float DifficultyMult = 1.05;
+
         timeSinceLastSpawn = 0.0f;
-        spawnInterval = RandomGen::randomFloat(2.0f, 5.0f);
+
+        spawnInterval = RandomGen::randomFloat(2.0f*DifficultyMult, 10.0f*DifficultyMult); //new spawn rate
     }
 
     for (auto& asteroid : asteroids) {

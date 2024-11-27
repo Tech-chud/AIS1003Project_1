@@ -63,6 +63,11 @@ void Player::setMass(float mass) {
     mass_ = mass;
 }
 
+void Player::setPosition(const Vector3& position) {
+    position_ = position;
+    mesh_->position.copy(position);
+}
+
 void Player::setColor(const Color& color) {
     material_->color = color;
 }

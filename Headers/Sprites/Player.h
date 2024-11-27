@@ -26,6 +26,8 @@ public:
     float getMass() const;
     void setMass(float mass);
 
+    void setPosition(const Vector3& position);
+
     void setColor(const Color& color); // Method to change the player's color
 
 private:
