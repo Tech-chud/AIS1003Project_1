@@ -1,8 +1,3 @@
-
-
-#ifndef ELASTICCOLLISION_H
-#define ELASTICCOLLISION_H
-
 #ifndef ELASTICCOLLISION_HPP
 #define ELASTICCOLLISION_HPP
 
@@ -21,10 +16,10 @@ public:
         std::vector<std::shared_ptr<Asteroid>>& asteroids,
         Player& player,
         std::shared_ptr<threepp::Scene>& scene,
-        float deltaTime);
+        float deltaTime,
+        int& health,      // Reference to modify health
+        float damageMult  // Multiplier for velocity-based damage
+    );
 };
 
 #endif // ELASTICCOLLISION_HPP
-
-
-#endif //ELASTICCOLLISION_H

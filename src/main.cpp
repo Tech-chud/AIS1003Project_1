@@ -56,6 +56,7 @@ int main() {
     canvas.addMouseListener(listener);
 
     const float scoreMult = 0.05f; // Destroying asteroids score also dependant on how long you survive
+    const float damageMult = 3.0f; // Damage based on Velocity*damageMult
 
     canvas.animate([&]() {
         float deltaTime = clock.getDelta();
@@ -80,7 +81,7 @@ int main() {
         Bullet::updateBullets(deltaTime, bullets, scene);
 
         // Asteroid-player collisions
-        ElasticCollision::handleAsteroidPlayerCollision(asteroids, player, scene, deltaTime);
+        ElasticCollision::handleAsteroidPlayerCollision(asteroids, player, scene, deltaTime, health, damageMult);
 
         // Collisions between bullets and asteroids
         InelasticCollision::handleCollisions(asteroids, bullets, scene, score, timeAlive, scoreMult);

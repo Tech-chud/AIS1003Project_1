@@ -60,10 +60,13 @@ void ElasticCollision::handleCollisions(std::vector<std::shared_ptr<Asteroid>>& 
 void ElasticCollision::handleAsteroidPlayerCollision(
     // GPT Was used here for general math questions
     // and for faultfinding a problem with a reccuring problem with an asteroid giving multiple colisions to player even in cooldown
-    std::vector<std::shared_ptr<Asteroid>>& asteroids,
+std::vector<std::shared_ptr<Asteroid>>& asteroids,
     Player& player,
     std::shared_ptr<threepp::Scene>& scene,
-    float deltaTime) {
+    float deltaTime,
+    int& health,           // Health is passed by reference to modify it
+    float damageMult) {    // Damage multiplier for velocity-based damage
+
     static float collisionCooldown = 0.0f;
     static std::unordered_set<std::shared_ptr<Asteroid>> collidingAsteroids;
 
@@ -103,16 +106,12 @@ void ElasticCollision::handleAsteroidPlayerCollision(
             // Get positions and velocities
             threepp::Vector3 asteroidVelocity = asteroid->getVelocity();
             threepp::Vector3 playerVelocity = player.getVelocity();
-            threepp::Vector3 asteroidPosition = asteroid->getPosition();
-            threepp::Vector3 playerPosition = player.getPosition();
 
             // Compute collision normal
-            threepp::Vector3 collisionNormal = (asteroidPosition - playerPosition).normalize();
+            threepp::Vector3 collisionNormal = (asteroid->getPosition() - player.getPosition()).normalize();
 
-            // Compute relative velocity
+            // Compute relative velocity along the collision normal
             threepp::Vector3 relativeVelocity = asteroidVelocity - playerVelocity;
-
-            // Compute velocity along collision normal
             float velocityAlongNormal = relativeVelocity.dot(collisionNormal);
 
             // Skip if the objects are separating
@@ -135,9 +134,16 @@ void ElasticCollision::handleAsteroidPlayerCollision(
             asteroidVelocity += impulseVector / asteroidMass;
             asteroid->setVelocity(asteroidVelocity);
 
-            // Slight backwards nudge on player on colision
+            // Slight backwards nudge on player on collision
             threepp::Vector3 nudgeVector = collisionNormal * -0.5f;
             player.setVelocity(nudgeVector);
+
+            // Calculate velocity-based damage
+            float collisionVelocity = relativeVelocity.length();
+            int damage = static_cast<int>(20 + collisionVelocity * damageMult);
+            health = std::max(0, health - damage); // Ensure health doesn't drop below 0
+
+            std::cout << "Player hit! Damage: " << damage << ", Health: " << health << std::endl;
 
             // Set collision cooldown "invis frames"
             collisionCooldown = 1.0f; // Cooldown in seconds

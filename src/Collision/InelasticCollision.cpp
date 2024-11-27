@@ -23,7 +23,7 @@ void InelasticCollision::handleCollisions(
                 int pointsEarned = static_cast<int>(1 + timeAlive * scoreMult);
                 score += pointsEarned;
 
-                // Log points for debugging
+                // Log points for debugging TEMP
                 std::cout << "Asteroid destroyed! +" << pointsEarned
                           << " points. Total Score: " << score << std::endl;
 
