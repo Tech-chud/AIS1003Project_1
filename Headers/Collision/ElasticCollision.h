@@ -10,7 +10,7 @@
 class ElasticCollision {
 public:
 
-    static void handleCollisions(std::vector<std::shared_ptr<Asteroid>>& asteroids);
+    static void handleAsteroidCollisions(std::vector<std::shared_ptr<Asteroid>>& asteroids);
 
     static void handleAsteroidPlayerCollision(
         std::vector<std::shared_ptr<Asteroid>>& asteroids,

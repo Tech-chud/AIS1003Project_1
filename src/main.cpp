@@ -31,10 +31,10 @@ int main() {
     float left, right, top, bottom;
     GameInit::getBounds(left, right, top, bottom);
 
-    // Initialize HUD
+
     GameHUD hud(canvas.size());
 
-    // Set player data
+    // Set game settings
     int score = 0;
     int health = 100;
     float timeAlive = 0.0f;
@@ -51,18 +51,19 @@ int main() {
     Player player(Vector3(0, 0, 0), 1.0f, Color::white);
     scene->add(player.getMesh());
 
-    // Input Listeners
+
     InputListener listener(*scene, player, bullets);
     canvas.addKeyListener(listener);
     canvas.addMouseListener(listener);
-    // Reset pass
+
+    // Reset pass Got some help from GPT on reset
     listener.setRestartCallback([&]() {
         GameInit::restart(score, health, timeAlive, gameOver, asteroids, bullets, player, hud);
     });
 
 
     const float scoreMult = 0.05f; // Destroying asteroids score also dependant on how long you survive
-    const float damageMult = 3.0f; // Damage based on Velocity*damageMult
+    const float damageMult = 2.0f; // Damage to player based on combined Velocity*damageMult
 
     canvas.animate([&]() {
         float deltaTime = clock.getDelta();
@@ -79,7 +80,7 @@ int main() {
             hud.updateTimeAlive(timeAlive);
 
             // Spawn, update, and wrap asteroids
-            Asteroid::updateAsteroids(deltaTime, left, right, top, bottom, asteroids, *scene);
+            Asteroid::updateAsteroids(deltaTime, left, right, top, bottom, asteroids, *scene, timeAlive);
 
             // Update player actions
             listener.updateActions(deltaTime);
@@ -94,7 +95,7 @@ int main() {
             InelasticCollision::handleCollisions(asteroids, bullets, scene, score, timeAlive, scoreMult);
 
             // Collisions between Asteroids
-            ElasticCollision::handleCollisions(asteroids);
+            ElasticCollision::handleAsteroidCollisions(asteroids);
 
             // Update player position and handle wrapping
             player.update(deltaTime);
@@ -109,7 +110,7 @@ int main() {
         renderer.render(*scene, *camera);
 
 
-        hud.render(renderer); //Do not put above renderer.render(scene,camera), it will not render then.
+        hud.render(renderer); //Do not put above renderer.render(scene,camera)
     });
 
     return 0;

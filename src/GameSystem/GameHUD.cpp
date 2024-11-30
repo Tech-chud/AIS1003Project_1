@@ -71,6 +71,7 @@ void GameHUD::setGameOverVisible(bool visible) {
     }
 }
 
+//GPT Code
 void GameHUD::render(threepp::GLRenderer& renderer) {
     try {
         renderer.autoClear = false; // Prevent clearing the render target

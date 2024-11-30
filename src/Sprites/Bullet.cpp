@@ -20,7 +20,7 @@ Bullet::Bullet(const Vector3& position, float angle, float speed, const Color& c
 void Bullet::update(float deltaTime) {
     applyPhysics(deltaTime);
 
-    // Decrease the lifespan
+
     lifespan -= deltaTime;
 
     // Debug before checking the condition

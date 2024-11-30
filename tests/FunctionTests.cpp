@@ -7,6 +7,7 @@
 
 using namespace threepp;
 
+// Had some problems giving this test cpp the dependencies of other parts of program got some help from GPT on faultfinding
 TEST_CASE("InelasticCollision correctly handles asteroid-bullet collisions", "[InelasticCollision]") {
     // Create a scene
     auto scene = Scene::create();

@@ -41,7 +41,8 @@ public:
         float top,
         float bottom,
         std::vector<std::shared_ptr<Asteroid>>& asteroids,
-        threepp::Scene& scene);
+        threepp::Scene& scene,
+        float timeAlive);
 
 private:
     // Static variables for spawn timing

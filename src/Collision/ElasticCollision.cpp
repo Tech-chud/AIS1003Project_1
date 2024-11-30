@@ -5,7 +5,7 @@
 #include <unordered_set> //Had problems with multi-colision on same asteroid asked chatgpt and they used this as a dependancy dont know if ill keep this
 
 
-void ElasticCollision::handleCollisions(std::vector<std::shared_ptr<Asteroid>>& asteroids) {
+void ElasticCollision::handleAsteroidCollisions(std::vector<std::shared_ptr<Asteroid>>& asteroids) {
     // Got some help here from GPT for checking two objects inside vector
     // And some general help when faultfinding why elastic colisons wouldnt work, math is allmost all gpt...
     for (size_t i = 0; i < asteroids.size(); ++i) {
@@ -23,7 +23,7 @@ void ElasticCollision::handleCollisions(std::vector<std::shared_ptr<Asteroid>>& 
                 Vector3 vel1 = asteroid1->getVelocity();
                 Vector3 vel2 = asteroid2->getVelocity();
 
-                // Masses currently not used however maybe when splitting asteroids one smaller will have less mass = different collision
+                // Masses currently not used however may be used in the future when splitting asteroids one smaller will have less mass = different collision
                 float mass1 = asteroid1->getMass();
                 float mass2 = asteroid2->getMass();
 
@@ -58,14 +58,14 @@ void ElasticCollision::handleCollisions(std::vector<std::shared_ptr<Asteroid>>& 
 }
 
 void ElasticCollision::handleAsteroidPlayerCollision(
-    // GPT Was used here for general math questions
-    // and for faultfinding a problem with a reccuring problem with an asteroid giving multiple colisions to player even in cooldown
+    // GPT Was used here for general math questions and some help
+    // and for faultfinding a problem with a reoccurring problem with an asteroid giving multiple collisions to player even in cooldown
 std::vector<std::shared_ptr<Asteroid>>& asteroids,
     Player& player,
     std::shared_ptr<threepp::Scene>& scene,
     float deltaTime,
-    int& health,           // Health is passed by reference to modify it
-    float damageMult) {    // Damage multiplier for velocity-based damage
+    int& health,
+    float damageMult) {
 
     static float collisionCooldown = 0.0f;
     static std::unordered_set<std::shared_ptr<Asteroid>> collidingAsteroids;

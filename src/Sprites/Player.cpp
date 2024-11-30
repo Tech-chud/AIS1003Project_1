@@ -2,7 +2,7 @@
 #include <cmath> // Include for std::sin and std::cos
 
 Player::Player(const Vector3& position, float mass, const Color& color)
-    : MovingObject(position, mass), rotationAngle(0.0f), thrustPower(20.0f), maxSpeed(10.0f), rotationSpeed(2.0f) {
+    : MovingObject(position, mass), rotationAngle(0.0f), thrustPower(15.0f), maxSpeed(8.0f), rotationSpeed(2.0f) {
 
     auto geometry = ConeGeometry::create(0.2, 0.5, 3); // Triangle shape for spaceship
     auto material = MeshBasicMaterial::create({{"color", color}});
@@ -44,7 +44,7 @@ float Player::getRotationAngle() const {
 }
 
 float Player::getRadius() const {
-    return 0.2f;
+    return 0.15f;
 }
 
 Vector3 Player::getVelocity() const {

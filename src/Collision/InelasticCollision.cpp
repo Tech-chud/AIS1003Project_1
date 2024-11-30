@@ -1,7 +1,7 @@
 #include "Collision/InelasticCollision.h"
 #include "Collision/BaseCollisionDetector.h"
-#include <iostream>
 
+//Collision between Asteroids and bullet
 void InelasticCollision::handleCollisions(
     std::vector<std::shared_ptr<Asteroid>>& asteroids,
     std::vector<std::shared_ptr<Bullet>>& bullets,
@@ -22,10 +22,6 @@ void InelasticCollision::handleCollisions(
                 // Calculate score increment: 1 + timeAlive * scoreMult
                 int pointsEarned = static_cast<int>(1 + timeAlive * scoreMult);
                 score += pointsEarned;
-
-                // Log points for debugging TEMP
-                std::cout << "Asteroid destroyed! +" << pointsEarned
-                          << " points. Total Score: " << score << std::endl;
 
                 // Remove bullet
                 itB = bullets.erase(itB);
